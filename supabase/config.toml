@@ -1,0 +1,10 @@
+project_id = "sowitrowxmrztheqcajc"
+
+[functions.api-create-checkout-session]
+verify_jwt = false
+
+[functions.api-stripe-webhook]
+verify_jwt = false
+
+[functions.api-cal-webhook]
+verify_jwt = false

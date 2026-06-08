@@ -94,8 +94,14 @@ grant all on public.bundle_purchases to service_role;
 grant all on public.bookings to service_role;
 grant all on public.session_completions to service_role;
 
-create policy if not exists "public read tutors" on public.tutors for select to anon, authenticated using (true);
-create policy if not exists "public read clients" on public.clients for select to anon, authenticated using (true);
-create policy if not exists "public read purchases" on public.bundle_purchases for select to anon, authenticated using (true);
-create policy if not exists "public read bookings" on public.bookings for select to anon, authenticated using (true);
-create policy if not exists "public read completions" on public.session_completions for select to anon, authenticated using (true);
+drop policy if exists "public read tutors" on public.tutors;
+drop policy if exists "public read clients" on public.clients;
+drop policy if exists "public read purchases" on public.bundle_purchases;
+drop policy if exists "public read bookings" on public.bookings;
+drop policy if exists "public read completions" on public.session_completions;
+
+create policy "public read tutors" on public.tutors for select to anon, authenticated using (true);
+create policy "public read clients" on public.clients for select to anon, authenticated using (true);
+create policy "public read purchases" on public.bundle_purchases for select to anon, authenticated using (true);
+create policy "public read bookings" on public.bookings for select to anon, authenticated using (true);
+create policy "public read completions" on public.session_completions for select to anon, authenticated using (true);

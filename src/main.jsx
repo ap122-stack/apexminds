@@ -9,13 +9,13 @@ const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env
 
 const tiers = {
   standard: { label: 'Standard', short: 'Core tutoring', description: 'Math, science, AP support, writing, and homework help.', walkIn: 45, accent: '#DBE7FF' },
-  test_prep: { label: 'Test Prep', short: 'SAT / ACT track', description: 'SAT/ACT strategy, pacing, diagnostics, and targeted practice.', walkIn: 60, accent: '#E7F7EF' },
+  test_prep: { label: 'Test Prep', short: 'SAT / ACT track', description: 'SAT/ACT strategy, pacing, diagnostics, and targeted practice.', walkIn: 80, accent: '#E7F7EF' },
   ap_direct: { label: 'AP Direct', short: 'With AP only', description: 'One-on-one sessions directly with AP for the highest-touch support.', walkIn: 55, accent: '#FAF0FF' },
 };
 
 const packages = {
   standard: { 4: { sku: 'standard_4', price: 148, rate: 37, savings: 32 }, 8: { sku: 'standard_8', price: 280, rate: 35, savings: 80 }, 12: { sku: 'standard_12', price: 396, rate: 33, savings: 144 } },
-  test_prep: { 4: { sku: 'test_prep_4', price: 212, rate: 53, savings: 28 }, 8: { sku: 'test_prep_8', price: 400, rate: 50, savings: 80 }, 12: { sku: 'test_prep_12', price: 576, rate: 48, savings: 144 } },
+  test_prep: { 4: { sku: 'test_prep_4', price: 292, rate: 73, savings: 28 }, 8: { sku: 'test_prep_8', price: 560, rate: 70, savings: 80 }, 12: { sku: 'test_prep_12', price: 816, rate: 68, savings: 144 } },
   ap_direct: { 4: { sku: 'ap_direct_4', price: 188, rate: 47, savings: 32 }, 8: { sku: 'ap_direct_8', price: 352, rate: 44, savings: 88 }, 12: { sku: 'ap_direct_12', price: 504, rate: 42, savings: 156 } },
 };
 
@@ -117,7 +117,7 @@ function App() {
           <p className="finePrint">Payment method, billing details, wallets, and subscription confirmation happen on Stripe Checkout.</p>
         </motion.form>
 
-        <motion.aside className="admissions" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }}><Mail size={20}/><div><strong>Admissions consulting</strong><p>$250 flat, inquiry only. AP handles admissions personally.</p></div></motion.aside>
+        <motion.aside className="admissions" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }}><Mail size={20}/><div><strong>Admissions consulting</strong><p><span className="strike">$550</span> <strong>$400</strong> — inquiry only. AP handles admissions personally.</p></div></motion.aside>
       </section>
     </section>
 

@@ -1,0 +1,2593 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Apex Minds | Elite AP Tutoring & Academic Consulting</title>
+    
+    <!-- Library Loading -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/history@5/umd/history.development.js"></script>
+    <script src="https://unpkg.com/react-router@6.3.0/umd/react-router.development.js"></script>
+    <script src="https://unpkg.com/react-router-dom@6.3.0/umd/react-router-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        window.MotionOne = window.MotionOne || {
+            animate: function(targets, keyframes, options) {
+                var elements = typeof targets === 'string'
+                    ? document.querySelectorAll(targets)
+                    : targets.length ? targets : [targets];
+                Array.prototype.forEach.call(elements, function(el, index) {
+                    if (!el || !el.animate) return;
+                    var opts = Object.assign({}, options || {});
+                    if (typeof opts.delay === 'function') opts.delay = opts.delay(index);
+                    el.animate(keyframes, opts);
+                });
+            },
+            stagger: function(step) {
+                return function(index) { return index * step; };
+            },
+            inView: function() {}
+        };
+    </script>
+
+    <!-- Fonts -->
+    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800,900&f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --apex-plum: #211c30;
+            --apex-plum-soft: #363146;
+            --apex-ivory: #fbfaf6;
+            --apex-violet: #f3efff;
+            --apex-gold: #d8b45d;
+            --apex-ink: #17151d;
+            --apex-line: rgba(33, 28, 48, 0.14);
+            --font-display: 'Cabinet Grotesk', 'Satoshi', sans-serif;
+            --font-body: 'Satoshi', Arial, sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .galaxy-gradient {
+            background: linear-gradient(
+                to right,
+                #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8f00ff
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            background-size: 200% auto;
+            animation: galaxy-move 5s linear infinite;
+        }
+        @keyframes galaxy-move {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-body);
+            background:
+                radial-gradient(circle at 8% 0%, rgba(216, 180, 93, 0.12), transparent 26rem),
+                radial-gradient(circle at 88% 12%, rgba(203, 194, 221, 0.24), transparent 30rem),
+                var(--apex-ivory);
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.035;
+            background-image:
+                linear-gradient(90deg, rgba(33, 28, 48, 0.8) 1px, transparent 1px),
+                linear-gradient(rgba(33, 28, 48, 0.8) 1px, transparent 1px);
+            background-size: 42px 42px;
+        }
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.18;
+            background:
+                linear-gradient(115deg, transparent 0 42%, rgba(216, 180, 93, 0.11) 42% 43%, transparent 43% 100%),
+                linear-gradient(65deg, transparent 0 58%, rgba(33, 28, 48, 0.08) 58% 59%, transparent 59% 100%);
+            animation: apex-ambient-drift 18s ease-in-out infinite alternate;
+        }
+        #root { position: relative; z-index: 1; }
+        h1, h2, h3, h4, .font-section-heading, .font-price-display, .font-price-display-mobile, .font-card-title {
+            font-family: var(--font-display);
+            letter-spacing: -0.015em;
+        }
+        button, input, select, textarea, .font-button-text, .font-label-caps {
+            font-family: var(--font-body);
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .active-tier {
+            border: 2px solid #363146 !important;
+            box-shadow: inset 0 0 0 1px #cbc2dd;
+        }
+        .selector-btn-active {
+            background-color: #363146;
+            color: #ffffff;
+        }
+        .apex-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            background:
+                linear-gradient(135deg, rgba(216, 180, 93, 0.14), transparent 28%),
+                radial-gradient(circle at 78% 24%, rgba(203, 194, 221, 0.18), transparent 24rem),
+                var(--apex-plum);
+            color: var(--apex-ivory);
+            animation: apex-loader-exit 0.92s cubic-bezier(.78, 0, .16, 1) forwards;
+            animation-delay: 1.92s;
+        }
+        .apex-loader::before,
+        .apex-loader::after {
+            content: "";
+            position: absolute;
+            background: rgba(251, 250, 246, 0.16);
+        }
+        .apex-loader::before {
+            width: 1px;
+            height: 100%;
+            left: 16%;
+            transform: scaleY(0);
+            transform-origin: top;
+            animation: apex-line-down 1.1s cubic-bezier(.22, 1, .36, 1) forwards;
+        }
+        .apex-loader::after {
+            height: 1px;
+            width: 100%;
+            top: 62%;
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: apex-line-across 1.1s cubic-bezier(.22, 1, .36, 1) forwards;
+            animation-delay: 0.18s;
+        }
+        .apex-loader-panel {
+            position: relative;
+            width: min(920px, calc(100vw - 48px));
+            display: grid;
+            grid-template-columns: 88px 1fr;
+            gap: 28px;
+            align-items: end;
+        }
+        .loader-index {
+            color: rgba(251, 250, 246, 0.52);
+            font: 700 12px/1 var(--font-body);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            transform: translateY(-14px);
+        }
+        .loader-word {
+            font-family: var(--font-display);
+            font-size: clamp(56px, 12vw, 148px);
+            font-weight: 900;
+            line-height: 0.82;
+            letter-spacing: -0.045em;
+            text-transform: uppercase;
+            transform: translateY(110%);
+            animation: apex-word-up 0.9s cubic-bezier(.22, 1, .36, 1) forwards;
+            text-shadow: 0 22px 80px rgba(216, 180, 93, 0.22);
+        }
+        .loader-word::after {
+            content: "";
+            display: block;
+            height: 7px;
+            width: min(360px, 70vw);
+            margin-top: 24px;
+            background: var(--apex-gold);
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: apex-loader-bar 0.72s cubic-bezier(.22, 1, .36, 1) forwards;
+            animation-delay: 0.58s;
+        }
+        .loader-actions {
+            grid-column: 2;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 28px;
+        }
+        .loader-actions span {
+            border: 1px solid rgba(251, 250, 246, 0.26);
+            border-radius: 999px;
+            padding: 10px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(14px);
+            animation: apex-chip-up 0.52s ease forwards;
+        }
+        .loader-actions span:nth-child(1) { animation-delay: 0.42s; }
+        .loader-actions span:nth-child(2) { animation-delay: 0.52s; }
+        .loader-actions span:nth-child(3) { animation-delay: 0.62s; }
+        .loader-actions span:nth-child(4) { animation-delay: 0.72s; }
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(28px);
+            animation: apex-reveal-up 0.76s cubic-bezier(.22, 1, .36, 1) forwards;
+        }
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(34px) scale(0.985);
+            transition: opacity 0.74s cubic-bezier(.22, 1, .36, 1), transform 0.74s cubic-bezier(.22, 1, .36, 1);
+        }
+        .scroll-reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .reveal-delay-1 { animation-delay: 0.12s; }
+        .reveal-delay-2 { animation-delay: 0.22s; }
+        .reveal-delay-3 { animation-delay: 0.32s; }
+        .motion-card {
+            transform-style: preserve-3d;
+            transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease, filter 0.35s ease;
+            box-shadow: 0 1px 0 rgba(33, 28, 48, 0.04);
+        }
+        .motion-card:hover {
+            transform: translateY(-9px) rotateX(1deg) rotateY(-1.5deg);
+            box-shadow: 0 22px 60px rgba(33, 28, 48, 0.13);
+            border-color: rgba(54, 49, 70, 0.42) !important;
+            filter: saturate(1.04);
+        }
+        .motion-card > * { transform: translateZ(1px); }
+        .premium-hero {
+            position: relative;
+            overflow: hidden;
+            background:
+                linear-gradient(120deg, rgba(251,250,246,0.96) 0%, rgba(250,248,255,0.92) 46%, rgba(33,28,48,0.06) 100%),
+                radial-gradient(circle at 78% 18%, rgba(216, 180, 93, 0.20), transparent 22rem);
+        }
+        .premium-hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                repeating-linear-gradient(90deg, transparent 0 118px, rgba(33,28,48,0.06) 119px, transparent 120px),
+                linear-gradient(180deg, transparent 0%, rgba(33,28,48,0.04) 100%);
+            -webkit-mask-image: linear-gradient(90deg, black, transparent 92%);
+                    mask-image: linear-gradient(90deg, black, transparent 92%);
+            animation: apex-grid-slide 14s linear infinite;
+        }
+        .premium-hero::before {
+            content: "01";
+            position: absolute;
+            top: 110px;
+            left: max(24px, calc((100vw - 1280px) / 2));
+            color: rgba(33, 28, 48, 0.16);
+            font: 900 148px/1 var(--font-display);
+            letter-spacing: -0.06em;
+            pointer-events: none;
+        }
+        .premium-hero img,
+        .image-rise {
+            animation: apex-image-rise 0.9s cubic-bezier(.22, 1, .36, 1) both;
+        }
+        .grain-overlay { position: relative; }
+        .grain-overlay::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.08;
+            background-image: radial-gradient(rgba(33,28,48,0.55) 0.55px, transparent 0.55px);
+            background-size: 8px 8px;
+            mix-blend-mode: multiply;
+        }
+        .magnetic-button {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+        .magnetic-button::after {
+            content: "";
+            position: absolute;
+            inset: auto auto -70% -20%;
+            width: 140%;
+            height: 120%;
+            background: rgba(216, 180, 93, 0.22);
+            transform: rotate(-8deg) translateY(100%);
+            transition: transform 0.38s ease;
+            z-index: -1;
+        }
+        .magnetic-button:hover::after { transform: rotate(-8deg) translateY(0); }
+        .kinetic-strip {
+            display: flex;
+            overflow: hidden;
+            gap: 18px;
+            border-block: 1px solid var(--apex-line);
+            background: rgba(33, 28, 48, 0.96);
+            color: var(--apex-ivory);
+            padding: 14px 0;
+            white-space: nowrap;
+        }
+        .kinetic-strip span {
+            display: inline-flex;
+            align-items: center;
+            gap: 18px;
+            font-family: var(--font-display);
+            font-size: clamp(18px, 2.3vw, 34px);
+            font-weight: 800;
+            letter-spacing: -0.035em;
+            text-transform: uppercase;
+            animation: apex-marquee 18s linear infinite;
+        }
+        .kinetic-strip span::after {
+            content: "•";
+            color: var(--apex-gold);
+        }
+        .tier-locked {
+            opacity: 0.46;
+            filter: grayscale(0.35);
+        }
+        .tier-locked::after {
+            content: "Locked by selected tutor";
+            position: absolute;
+            inset: 12px 12px auto auto;
+            z-index: 5;
+            border: 1px solid rgba(33,28,48,0.18);
+            border-radius: 999px;
+            background: rgba(255,255,255,0.86);
+            color: var(--apex-plum);
+            padding: 7px 10px;
+            font: 700 10px/1 var(--font-body);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .tier-lock-banner {
+            background:
+                linear-gradient(135deg, rgba(33,28,48,0.98), rgba(54,49,70,0.94)),
+                radial-gradient(circle at 92% 20%, rgba(216,180,93,0.22), transparent 18rem);
+            color: var(--apex-ivory);
+        }
+        .kinetic-word {
+            display: inline-block;
+            animation: apex-word-float 5.5s ease-in-out infinite alternate;
+        }
+        nav a {
+            position: relative;
+        }
+        nav a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -8px;
+            height: 1px;
+            background: currentColor;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.28s ease;
+        }
+        nav a:hover::after { transform: scaleX(1); }
+        section {
+            border-color: var(--apex-line) !important;
+        }
+        input, select, textarea {
+            background-color: rgba(255, 255, 255, 0.92) !important;
+            border-color: rgba(33, 28, 48, 0.16) !important;
+            box-shadow: 0 1px 0 rgba(33, 28, 48, 0.03);
+        }
+        input:focus, select:focus, textarea:focus {
+            box-shadow: 0 0 0 4px rgba(203, 194, 221, 0.32) !important;
+        }
+        .rounded-xl, .rounded-lg {
+            border-radius: 12px;
+        }
+        .bg-white {
+            background-color: rgba(255, 255, 255, 0.92);
+        }
+        .shadow-sm {
+            box-shadow: 0 10px 30px rgba(33, 28, 48, 0.06);
+        }
+        .text-price-display {
+            font-size: clamp(56px, 7vw, 92px) !important;
+            line-height: 0.92 !important;
+            letter-spacing: -0.055em !important;
+        }
+        @keyframes apex-word-up {
+            to { transform: translateY(0); }
+        }
+        @keyframes apex-chip-up {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes apex-line-down {
+            to { transform: scaleY(1); }
+        }
+        @keyframes apex-line-across {
+            to { transform: scaleX(1); }
+        }
+        @keyframes apex-loader-exit {
+            to { transform: translateY(-100%); visibility: hidden; }
+        }
+        @keyframes apex-loader-bar {
+            to { transform: scaleX(1); }
+        }
+        @keyframes apex-reveal-up {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes apex-image-rise {
+            from { opacity: 0; transform: scale(1.04) translateY(18px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes apex-grid-slide {
+            from { background-position: 0 0, 0 0; }
+            to { background-position: 240px 0, 0 0; }
+        }
+        @keyframes apex-marquee {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+        @keyframes apex-word-float {
+            from { transform: translateY(0) skewX(0deg); }
+            to { transform: translateY(-5px) skewX(-2deg); }
+        }
+        @keyframes apex-ambient-drift {
+            from { transform: translate3d(-1.5%, -1%, 0) scale(1); }
+            to { transform: translate3d(1.5%, 1%, 0) scale(1.03); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+            .apex-loader { display: none; }
+            .reveal-up { opacity: 1; transform: none; }
+        }
+        @media (max-width: 640px) {
+            .apex-loader-panel {
+                grid-template-columns: 1fr;
+                align-items: start;
+            }
+            .loader-actions { grid-column: 1; }
+            .premium-hero::before {
+                top: 80px;
+                font-size: 92px;
+            }
+        }
+    </style>
+
+    <script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "error-container": "#ffdad6",
+                "surface-container": "#eeeeef",
+                "on-tertiary-fixed-variant": "#005236",
+                "on-background": "#1a1c1d",
+                "tertiary-fixed-dim": "#71daa8",
+                "blue-surface": "#DBE7FF",
+                "surface-container-low": "#f3f3f4",
+                "surface-container-high": "#e8e8e9",
+                "secondary-fixed": "#e4e1e9",
+                "primary-fixed": "#e7defa",
+                "inverse-surface": "#2f3132",
+                "on-secondary-container": "#636269",
+                "surface-tint": "#615b72",
+                "tertiary": "#002416",
+                "surface-dim": "#d9dadb",
+                "outline-variant": "#cac5cd",
+                "secondary-fixed-dim": "#c7c5cd",
+                "surface-bright": "#f9f9fa",
+                "ink": "#2B2B31",
+                "secondary-container": "#e1dee6",
+                "on-tertiary-fixed": "#002113",
+                "border": "#DCDCDF",
+                "error": "#ba1a1a",
+                "plum": "#363146",
+                "on-primary": "#ffffff",
+                "background": "#f9f9fa",
+                "on-surface-variant": "#48464c",
+                "on-primary-fixed": "#1d192c",
+                "outline": "#79767d",
+                "surface-variant": "#e2e2e3",
+                "on-tertiary-container": "#43ae80",
+                "on-error": "#ffffff",
+                "surface": "#f9f9fa",
+                "tertiary-fixed": "#8df7c3",
+                "secondary": "#5e5e64",
+                "on-secondary-fixed-variant": "#46464d",
+                "inverse-primary": "#cbc2dd",
+                "inverse-on-surface": "#f0f1f2",
+                "on-tertiary": "#ffffff",
+                "muted-text": "#77777F",
+                "tertiary-container": "#003c26",
+                "on-primary-fixed-variant": "#49445a",
+                "on-primary-container": "#a099b2",
+                "surface-container-lowest": "#ffffff",
+                "surface-container-highest": "#e2e2e3",
+                "on-surface": "#1a1c1d",
+                "primary-fixed-dim": "#cbc2dd",
+                "success": "#178F63",
+                "violet-panel": "#FAF8FF",
+                "on-error-container": "#93000a",
+                "primary-container": "#363146",
+                "on-secondary": "#ffffff",
+                "on-secondary-fixed": "#1b1b21",
+                "primary": "#211c30"
+              },
+              "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+              },
+              "spacing": {
+                "pane-right-max": "560px",
+                "stack-md": "24px",
+                "gutter": "32px",
+                "stack-sm": "8px",
+                "stack-lg": "48px",
+                "pane-left-max": "430px"
+              },
+              "fontSize": {
+                "price-display-mobile": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "price-display": ["60px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "button-text": ["15px", {"lineHeight": "1", "fontWeight": "600"}],
+                "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "card-title": ["18px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                "section-heading": ["26px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+  <script type="module" crossorigin src="/assets/index-CWkMrIu0.js"></script>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary-fixed">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, createContext, useContext } = React;
+        const { createRoot } = ReactDOM;
+        const { BrowserRouter, Routes, Route, Link, useNavigate, useLocation, useParams } = ReactRouterDOM;
+        const ADMISSIONS_CHECKOUT_URL = 'https://buy.stripe.com/dRm14n0Z25Xc8gkbIh0sU0a'; // Admissions package updated
+        const ADMISSIONS_CAL_LINK = 'anirudh-pappu/adconsult';
+        const SUPABASE_URL = 'https://sowitrowxmrztheqcajc.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvd2l0cm93eG1yenRoZXFjYWpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NzYxNDYsImV4cCI6MjA5NTU1MjE0Nn0.HtwfQvYsRyv1sJOL0ikolK1i3xT_LTV7kHTooVLiNcA';
+        const supabaseClient = window.supabase && SUPABASE_URL && !SUPABASE_URL.includes('VITE_')
+            ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+            : null;
+
+        const TUTOR_PROFILES = [
+            {
+                id: 'stem',
+                type: 'STEM',
+                title: 'STEM Tutor',
+                desc: 'Algebra, Biology, Chemistry, AP STEM support.',
+                fit: 'Structured practice, concept repair, weekly accountability.',
+                schedule: 'Weekday evenings',
+                tier: 'standard',
+                subjects: ['Algebra', 'Biology', 'Chemistry', 'AP STEM support'],
+                style: 'Patient concept repair with repeated practice and calm weekly accountability.',
+                dashboard: ['Lists covered subjects', 'Sets weekly availability', 'Tracks active students', 'Marks sessions complete'],
+                calLink: 'anirudh-pappu/tutoring',
+                img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAxozJx_nKr9a4kG72SwrorhbT7wHLZpMK4hwh4mxVA3-N1E5b8C8NWKDMQxQWzZssw_wRP5Gb2spu8SvuQcWBkEYng1ihH92wNIQQESpcvsUKZ8ZfM4TZna4ZisAPdmH1vQPzZPjpRj8o6vrOXcw4aEwQr9Q_FSuSJimrjHhIqCoil-Dy0er4lOc_RuwXzFN_y2_xShf1RkloOZ2NfrhpAoLToyfK9V5m5nh1CBcf45LrHKR9cN3WyXt4zUsAnybSxdqXt3P03Ow'
+            },
+            {
+                id: 'testprep',
+                type: 'TEST PREP',
+                title: 'Test Prep Tutor',
+                desc: 'SAT/ACT, pacing, question strategy.',
+                fit: 'Diagnostic review, timed practice, score-plan rhythm.',
+                schedule: 'Weekends and evenings',
+                tier: 'testprep',
+                subjects: ['SAT Math', 'SAT Reading', 'ACT pacing', 'Timed drills'],
+                style: 'Data-driven score plan with diagnostic review and timed reps.',
+                dashboard: ['Uploads practice-test notes', 'Sets testing windows', 'Tracks score movement', 'Marks homework drills'],
+                calLink: 'anirudh-pappu/tutoring',
+                img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAt5859fNj175WLgc1tIWw6WwForbTod9sufITY4QkJFaJ5Q5yaPqlDqlBR444uu1GRuMuW2OLsOeXYYC-TJCUcOb7srAORBOXFwpn2JI0uvG57kuDR5gPQZ_cyGwsB-XH8phiCaN-IRd3Bb5nMhxJeWaqQBYF3Ape1-ChXLxxD38Bt4PDfUEPUnkgDvT19eReGjmwVko8IXQ2DmnNv31V2067MNx-JuYATSZi7lPaFZjJv3kxszOQeBNrLGfJMyEkbGHJ_j3ZkSQ'
+            },
+            {
+                id: 'humanities',
+                type: 'HUMANITIES',
+                title: 'Humanities Tutor',
+                desc: 'English, history, writing, AP humanities.',
+                fit: 'Essay structure, reading strategy, discussion-led sessions.',
+                schedule: 'After school',
+                tier: 'standard',
+                subjects: ['English', 'History', 'Essay writing', 'AP humanities'],
+                style: 'Discussion-led writing support with clear outlines and revision plans.',
+                dashboard: ['Lists writing strengths', 'Tracks draft deadlines', 'Shares revision notes', 'Marks completed writing sessions'],
+                calLink: 'anirudh-pappu/tutoring',
+                img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDy8qH7h177nYkzkxUIoT47pLT15nsvkRQV3qxGQqddHssosyRhMTArJhvZcVHRUMvwdfSfxGsad2_VNVgCX4vMXplF_SnTIfqdRKUNzHZLde9DS1EhVW6-e9-VM4eTHkeBJnavvK8o_e67HVIubnwXGX4t4tkWKBCEu5iB2BU8MuutG9SkAgXsDcj4jnbqHyH_ah4LkrEDlAsPO-iiEmk7PxoBu3KzwK4c79cP-MfTZunSRXz7xs8byP7HLvpznLSytX8rOFgtUg'
+            }
+        ];
+
+        const TUTOR_CALENDAR_SLOTS = [
+            { id: 'mon-430-stem', tutorId: 'stem', tutor: 'STEM Tutor', day: 'Mon', date: 'June 15', time: '4:30 PM', subject: 'STEM', booked: false },
+            { id: 'tue-500-writing', tutorId: 'humanities', tutor: 'Humanities Tutor', day: 'Tue', date: 'June 16', time: '5:00 PM', subject: 'Writing', booked: false },
+            { id: 'wed-430-test', tutorId: 'testprep', tutor: 'Test Prep Tutor', day: 'Wed', date: 'June 17', time: '4:30 PM', subject: 'SAT/ACT', booked: false },
+            { id: 'thu-700-stem', tutorId: 'stem', tutor: 'STEM Tutor', day: 'Thu', date: 'June 18', time: '7:00 PM', subject: 'STEM', booked: true },
+            { id: 'sat-1000-test', tutorId: 'testprep', tutor: 'Test Prep Tutor', day: 'Sat', date: 'June 20', time: '10:00 AM', subject: 'SAT/ACT', booked: false },
+            { id: 'sun-300-writing', tutorId: 'humanities', tutor: 'Humanities Tutor', day: 'Sun', date: 'June 21', time: '3:00 PM', subject: 'Writing', booked: false }
+        ];
+
+        const loadCalEmbed = (onReady) => {
+            if (window.Cal) {
+                onReady();
+                return;
+            }
+            if (document.getElementById('cal-embed-script')) {
+                const waitForCal = setInterval(() => {
+                    if (window.Cal) {
+                        clearInterval(waitForCal);
+                        onReady();
+                    }
+                }, 150);
+                setTimeout(() => clearInterval(waitForCal), 8000);
+                return;
+            }
+            (function (C, A, L) {
+                let p = function (a, ar) { a.q.push(ar); };
+                let d = C.document;
+                C.Cal = C.Cal || function () {
+                    let cal = C.Cal;
+                    let ar = arguments;
+                    if (!cal.loaded) {
+                        cal.ns = {};
+                        cal.q = cal.q || [];
+                        let script = d.createElement('script');
+                        script.id = 'cal-embed-script';
+                        script.src = A;
+                        script.onload = onReady;
+                        d.head.appendChild(script);
+                        cal.loaded = true;
+                    }
+                    if (ar[0] === L) {
+                        const api = function () { p(api, arguments); };
+                        const namespace = ar[1];
+                        api.q = api.q || [];
+                        if (typeof namespace === 'string') {
+                            cal.ns[namespace] = cal.ns[namespace] || api;
+                            p(cal.ns[namespace], ar);
+                            p(cal, ['initNamespace', namespace]);
+                        } else p(cal, ar);
+                        return;
+                    }
+                    p(cal, ar);
+                };
+            })(window, 'https://app.cal.com/embed/embed.js', 'init');
+            window.Cal('init');
+        };
+
+        // --- Global State Context ---
+        const AppContext = createContext();
+
+        const AppProvider = ({ children }) => {
+            const [cart, setCart] = useState([]);
+            const [isPricingOpen, setIsPricingOpen] = useState(false);
+            const [selectedBooking, setSelectedBooking] = useState(null);
+
+            const addToCart = (pkg) => {
+                setCart(prev => [...prev, pkg]);
+            };
+
+            const clearCart = () => setCart([]);
+
+            return (
+                <AppContext.Provider value={{ cart, addToCart, clearCart, isPricingOpen, setIsPricingOpen, selectedBooking, setSelectedBooking }}>
+                    {children}
+                </AppContext.Provider>
+            );
+        };
+
+        // --- Common Components ---
+        const ApexLoader = () => {
+            return (
+                <div className="apex-loader" aria-hidden="true">
+                    <div className="apex-loader-panel">
+                        <div className="loader-index">AP / 01</div>
+                        <div>
+                            <div className="loader-word">Apex<br />Minds</div>
+                            <div className="loader-actions">
+                                <span>Match</span>
+                                <span>Book</span>
+                                <span>Master</span>
+                                <span>Apply</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const MotionDirector = () => {
+            const location = useLocation();
+
+            useEffect(() => {
+                const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                if (reducedMotion) return;
+
+                const revealTargets = Array.prototype.slice.call(document.querySelectorAll('.motion-card, .scroll-reveal'));
+                if ('IntersectionObserver' in window) {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach((entry) => {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add('is-visible');
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    }, { threshold: 0.16 });
+                    revealTargets.forEach((el) => observer.observe(el));
+                    window.setTimeout(() => observer.disconnect(), 12000);
+                } else {
+                    revealTargets.forEach((el) => el.classList.add('is-visible'));
+                }
+
+                if (window.MotionOne && window.MotionOne.animate) {
+                    try {
+                        const kineticWords = document.querySelectorAll('.premium-hero .kinetic-word');
+                        if (kineticWords.length > 0) {
+                            window.MotionOne.animate(
+                                kineticWords,
+                                { y: [0, -7, 0], rotate: [0, -1.2, 0] },
+                                { duration: 5.6, repeat: Infinity, easing: 'ease-in-out' }
+                            );
+                        }
+                        const cards = document.querySelectorAll('.motion-card');
+                        if (cards.length > 0) {
+                            window.MotionOne.animate(
+                                cards,
+                                { opacity: [0, 1], y: [28, 0] },
+                                { duration: 0.7, delay: window.MotionOne.stagger ? window.MotionOne.stagger(0.045) : 0.08 }
+                            );
+                        }
+                    } catch (_motionError) {}
+                }
+            }, [location.pathname]);
+
+            return null;
+        };
+
+        const Header = () => {
+            const navigate = useNavigate();
+            const location = useLocation();
+            const { cart, setIsPricingOpen } = useContext(AppContext);
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
+            
+            const navLinks = [
+                { name: 'Home', path: '/' },
+                { name: 'Tutors', path: '/tutors' },
+                { name: 'Match', path: '/match' },
+                { name: 'Pricing', path: '/packages' },
+                { name: 'Admissions', path: '/admissions' },
+                { name: 'About Us', path: '/about' },
+            ];
+
+            const handleCartClick = () => {
+                if (cart.length > 0) {
+                    // Redirect to the last added item's checkout URL
+                    window.location.href = cart[cart.length - 1].url;
+                } else {
+                    alert("Your cart is empty!");
+                }
+            };
+
+            return (
+                <nav className="sticky top-0 z-50 w-full bg-surface/90 backdrop-blur-xl border-b border-border shadow-sm">
+                    <div className="flex justify-between items-center w-full px-4 sm:px-8 h-20">
+                        <div className="font-section-heading text-[22px] sm:text-section-heading font-bold text-plum cursor-pointer whitespace-nowrap" onClick={() => navigate('/')}>Apex Minds</div>
+                        <div className="hidden xl:flex items-center gap-6">
+                            {navLinks.map(link => (
+                                <Link 
+                                    key={link.path}
+                                    to={link.path} 
+                                    className={`font-button-text text-button-text transition-colors ${location.pathname === link.path ? 'text-plum font-bold border-b-2 border-plum pb-1' : 'text-secondary hover:text-plum'}`}
+                                >
+                                    {link.name}
+                                </Link>
+                            ))}
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={() => navigate('/login')}
+                                className="hidden sm:inline-flex bg-black text-white px-3 py-2 rounded-lg font-button-text text-[13px] hover:bg-plum transition-colors magnetic-button"
+                            >
+                                Login
+                            </button>
+                            <div 
+                                onClick={handleCartClick}
+                                className={`flex items-center gap-2 px-3 py-2 border rounded-lg cursor-pointer transition-all ${cart.length > 0 ? 'border-plum bg-plum/5' : 'border-border text-muted-text hover:border-plum'}`}
+                            >
+                                <span className="material-symbols-outlined">shopping_cart</span>
+                                <span className="font-button-text text-[14px] min-w-[10px] text-center">
+                                    {cart.length}
+                                </span>
+                                {cart.length > 0 && (
+                                    <span className="flex h-2 w-2 rounded-full bg-plum animate-pulse"></span>
+                                )}
+                            </div>
+                            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="xl:hidden border border-border rounded-lg p-2 text-plum">
+                                <span className="material-symbols-outlined">{isMenuOpen ? 'close' : 'menu'}</span>
+                            </button>
+                        </div>
+                    </div>
+                    {isMenuOpen && (
+                        <div className="xl:hidden px-4 sm:px-8 pb-4 bg-white border-t border-border grid grid-cols-2 sm:grid-cols-4 gap-2">
+                            <Link
+                                to="/login"
+                                onClick={() => setIsMenuOpen(false)}
+                                className="px-3 py-3 rounded-lg border border-black bg-black text-white text-sm font-button-text"
+                            >
+                                Login
+                            </Link>
+                            {navLinks.map(link => (
+                                <Link
+                                    key={link.path}
+                                    to={link.path}
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className={`px-3 py-3 rounded-lg border text-sm font-button-text ${location.pathname === link.path ? 'border-plum bg-violet-panel text-plum' : 'border-border text-secondary'}`}
+                                >
+                                    {link.name}
+                                </Link>
+                            ))}
+                        </div>
+                    )}
+                </nav>
+            );
+        };
+
+        const PricingOverlay = () => {
+            const { isPricingOpen, setIsPricingOpen } = useContext(AppContext);
+            if (!isPricingOpen) return null;
+
+            return (
+                <div className="fixed inset-0 z-[100] flex items-start justify-center pt-20 bg-plum/20 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white w-full max-w-6xl mx-4 p-8 rounded-2xl shadow-2xl border border-border max-h-[85vh] overflow-y-auto">
+                        <div className="flex justify-between items-center mb-8 border-b border-border pb-4">
+                            <h2 className="font-section-heading text-plum">Pricing Tiers</h2>
+                            <button onClick={() => setIsPricingOpen(false)} className="material-symbols-outlined text-secondary hover:text-plum transition-colors p-2">close</button>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="p-6 border border-border rounded-xl">
+                                <h3 className="font-card-title text-plum mb-2">STANDARD</h3>
+                                <p className="text-secondary text-body-sm mb-4">Core subject support and curriculum mastery.</p>
+                                <div className="text-plum font-bold text-2xl mb-4">From $148/mo</div>
+                                <button onClick={() => { setIsPricingOpen(false); window.location.hash = '/packages'; }} className="w-full py-2 border border-plum text-plum rounded hover:bg-plum hover:text-white transition-all font-button-text">Select Standard</button>
+                            </div>
+                            <div className="p-6 border-2 border-plum rounded-xl bg-violet-panel relative">
+                                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-plum text-white text-[10px] px-3 py-1 rounded-full font-bold">POPULAR</span>
+                                <h3 className="font-card-title text-plum mb-2">TEST PREP</h3>
+                                <p className="text-secondary text-body-sm mb-4">SAT/ACT strategists and proctored exams.</p>
+                                <div className="text-plum font-bold text-2xl mb-4">From $267/mo</div>
+                                <button onClick={() => { setIsPricingOpen(false); window.location.hash = '/packages'; }} className="w-full py-2 bg-plum text-white rounded hover:opacity-90 transition-all font-button-text">Select Test Prep</button>
+                            </div>
+                            <div className="p-6 border border-border rounded-xl">
+                                <h3 className="font-card-title text-plum mb-2">ADVANCED PLACEMENT</h3>
+                                <p className="text-secondary text-body-sm mb-4">AP course support, FRQ drills, and exam strategy.</p>
+                                <div className="text-plum font-bold text-2xl mb-4">From $188/mo</div>
+                                <button onClick={() => { setIsPricingOpen(false); window.location.hash = '/packages'; }} className="w-full py-2 border border-plum text-plum rounded hover:bg-plum hover:text-white transition-all font-button-text">Select Advanced Placement</button>
+                            </div>
+                        </div>
+                        <div className="mt-8 pt-6 border-t border-border text-center">
+                            <p className="text-muted-text text-body-sm">All packages include monthly progress reports and expert mentor matching.</p>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const Footer = () => (
+            <footer className="w-full py-12 px-8 flex flex-col md:flex-row justify-between items-center gap-4 bg-surface-container-low border-t border-border mt-auto">
+                <div className="flex flex-col items-center md:items-start gap-2">
+                    <div className="font-card-title text-card-title font-bold text-plum">Apex Minds</div>
+                    <p className="font-body-sm text-body-sm text-muted-text">© 2024 Apex Minds Tutoring. All rights reserved.</p>
+                </div>
+                <div className="flex gap-8">
+                    <a className="font-body-sm text-body-sm text-muted-text hover:text-plum transition-colors" href="#">Terms of Service</a>
+                    <a className="font-body-sm text-body-sm text-muted-text hover:text-plum transition-colors" href="#">Privacy Policy</a>
+                    <a className="font-body-sm text-body-sm text-muted-text hover:text-plum transition-colors" href="#">Cookie Policy</a>
+                </div>
+            </footer>
+        );
+
+        // --- Screens ---
+
+        const HomePage = () => {
+            const navigate = useNavigate();
+            return (
+                <main className="w-full">
+                    <section className="premium-hero grain-overlay bg-white py-24 border-b border-border">
+                        <div className="max-w-7xl mx-auto px-gutter grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                            <div className="max-w-[560px] reveal-up">
+                                <span className="font-label-caps text-label-caps text-plum uppercase tracking-widest mb-5 block">01 / Private academic direction</span>
+                                <h1 className="font-price-display text-price-display text-plum mb-6"><span className="kinetic-word">Get 1-on-1 Coaching</span> to Secure Your Top-Choice University.</h1>
+                                <p className="font-body-lg text-body-lg text-secondary mb-10 leading-relaxed reveal-up reveal-delay-1">Achieve academic excellence with specialized tutors from the world's leading universities. We match students with mentors who simplify complexity and build confidence.</p>
+                                <div className="flex flex-wrap gap-4">
+                                    <button onClick={() => navigate('/match')} className="bg-plum text-white font-button-text text-button-text px-8 py-4 rounded-lg hover:opacity-90 transition-all magnetic-button">
+                                        Get My 4.0 Plan
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="hidden md:block">
+                                <img className="rounded-xl shadow-sm border border-border w-full h-[400px] object-cover image-rise" alt="Elite tutoring" src="https://images.unsplash.com/photo-1523240715629-67f85ba8bc3b?auto=format&fit=crop&q=80&w=1200" />
+                            </div>
+                        </div>
+                    </section>
+                    <div className="kinetic-strip" aria-hidden="true">
+                        <span>Match smarter Book faster Master harder Apply cleaner Match smarter Book faster Master harder Apply cleaner</span>
+                        <span>Match smarter Book faster Master harder Apply cleaner Match smarter Book faster Master harder Apply cleaner</span>
+                    </div>
+                    <section className="py-16 bg-white">
+                        <div className="max-w-7xl mx-auto px-gutter text-center">
+                            <h2 className="font-section-heading text-section-heading text-plum mb-12">Our Specialized Disciplines</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <div className="p-8 border border-border rounded-xl hover:border-plum transition-all motion-card reveal-up">
+                                    <span className="material-symbols-outlined text-4xl text-plum mb-4">science</span>
+                                    <h3 className="font-card-title text-card-title text-plum mb-2">STEM</h3>
+                                    <p className="text-secondary text-body-sm">Algebra, Calculus & Physics mastery with custom concept-repair.</p>
+                                </div>
+                                <div className="p-8 border border-border rounded-xl hover:border-plum transition-all motion-card reveal-up reveal-delay-1">
+                                    <span className="material-symbols-outlined text-4xl text-plum mb-4">history_edu</span>
+                                    <h3 className="font-card-title text-card-title text-plum mb-2">Humanities</h3>
+                                    <p className="text-secondary text-body-sm">Transform essay writing into a competitive advantage for admissions.</p>
+                                </div>
+                                <div className="p-8 border border-border rounded-xl hover:border-plum transition-all motion-card reveal-up reveal-delay-2">
+                                    <span className="material-symbols-outlined text-4xl text-plum mb-4">assignment_turned_in</span>
+                                    <h3 className="font-card-title text-card-title text-plum mb-2">Test Prep</h3>
+                                    <p className="text-secondary text-body-sm">Strategic SAT/ACT patterns and pacing for maximum score improvement.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            );
+        };
+
+        const TutorsPage = () => {
+            const navigate = useNavigate();
+            const { setSelectedBooking } = useContext(AppContext);
+            const [monthlySessions, setMonthlySessions] = useState(8);
+            const [weeklyPlan, setWeeklyPlan] = useState(2);
+            const [selectedSlots, setSelectedSlots] = useState([]);
+
+            const tutorCards = TUTOR_PROFILES;
+            const calendarSlots = TUTOR_CALENDAR_SLOTS;
+
+            const toggleSlot = (slot) => {
+                if (slot.booked) return;
+                setSelectedSlots(prev => (
+                    prev.includes(slot.id)
+                        ? prev.filter(id => id !== slot.id)
+                        : prev.length < monthlySessions
+                            ? [...prev, slot.id]
+                            : prev
+                ));
+            };
+
+            const scrollToCalendar = () => {
+                const calendar = document.getElementById('tutor-calendar');
+                if (calendar) calendar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            };
+
+            const continueToPackages = () => {
+                const selectedSlotData = calendarSlots.filter(slot => selectedSlots.includes(slot.id));
+                const firstTutor = selectedSlotData.length > 0
+                    ? tutorCards.find(t => t.id === selectedSlotData[0].tutorId)
+                    : null;
+                setSelectedBooking({
+                    source: 'client-calendar',
+                    tutorId: firstTutor ? firstTutor.id : '',
+                    tutorName: firstTutor ? firstTutor.title : 'Tutor selection pending',
+                    tier: firstTutor ? firstTutor.tier : 'standard',
+                    monthlySessions: monthlySessions,
+                    weeklyPlan: weeklyPlan,
+                    slots: selectedSlotData
+                });
+                navigate('/packages');
+            };
+
+            return (
+                <main className="w-full">
+                    {/* Hero Section */}
+                    <section className="premium-hero bg-white py-24 border-b border-border">
+                        <div className="max-w-7xl mx-auto px-gutter grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                            <div className="max-w-[560px] reveal-up">
+                                <span className="font-label-caps text-label-caps text-plum uppercase tracking-widest mb-5 block">02 / Tutor marketplace</span>
+                                <h1 className="font-price-display text-price-display text-plum mb-6">Choose a tutor with calm, clear fit.</h1>
+                                <p className="font-body-lg text-body-lg text-secondary mb-10 leading-relaxed">Browse curated Apex Minds profiles, review subject fit and teaching style, then choose availability before checkout.</p>
+                                <div className="flex flex-wrap gap-4">
+                                    <button onClick={() => navigate('/packages')} className="bg-plum text-white font-button-text text-button-text px-8 py-4 rounded-lg hover:opacity-90 transition-all magnetic-button">
+                                        See packages
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="hidden md:block">
+                                <img className="rounded-xl shadow-sm border border-border w-full h-[400px] object-cover image-rise" alt="Elite academic atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDY7UVE9-iBOzKES7bumU0XT0zlRCF3yrMcchb_FdQpMLrHRFvVMQHYZ09gleFZ9JTP9qDjy8wAhw7u01Aaqb9vDuVx6r-x0jjtlpbu8roxsymmRS7tKgnPeqaq8etKHqiOINM_w_1L5CZn-gP1VWwlQNLsTQet_mHfCxVqmc5sWmfp6U_7FGUlVtveYbNdezBFuDi8zgqyNbug9V1C6O_zsHDHO_m40-GBI2TXJsksU5XR-tWBhJbFvObaWMawvs9wFrDXKProQQ" />
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Filter Bar */}
+                    <section className="sticky top-20 z-40 bg-surface-bright border-b border-border py-4 shadow-sm">
+                        <div className="max-w-7xl mx-auto px-gutter flex flex-wrap items-center gap-4">
+                            {['SUBJECT', 'TIER', 'STYLE', 'AVAILABILITY'].map((filter, idx) => (
+                                <div key={filter} className="flex items-center gap-2 px-3 py-2 border border-border rounded-lg bg-white cursor-pointer hover:border-plum transition-colors">
+                                    <span className="font-label-caps text-label-caps text-muted-text">{filter}</span>
+                                    <span className="font-body-sm text-body-sm text-plum font-semibold">
+                                        {['All Subjects', 'Any Tier', 'Teaching Style', 'Select Times'][idx]}
+                                    </span>
+                                    <span className="material-symbols-outlined text-[20px] text-muted-text">expand_more</span>
+                                </div>
+                            ))}
+                            <div className="ml-auto flex items-center gap-2 text-muted-text">
+                                <span className="font-body-sm text-body-sm">4 tutors available</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Tutor Directory Grid */}
+                    <section className="py-16 bg-white" id="tutors">
+                        <div className="max-w-7xl mx-auto px-gutter">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                {tutorCards.map((t) => (
+                                    <div key={t.id} className={`group border rounded-xl p-6 flex flex-col h-full hover:border-plum transition-all duration-300 hover:-translate-y-1 motion-card reveal-up ${t.isSpecial ? 'border-primary-fixed bg-violet-panel' : 'border-border bg-white'}`}>
+                                        <div className="mb-6 relative">
+                                            <img className="w-full h-48 object-cover rounded-lg mb-4" alt={t.title} src={t.img} />
+                                            <span className={`absolute top-2 right-2 px-3 py-1 rounded-full font-label-caps text-label-caps border ${t.isSpecial ? 'bg-plum text-white font-bold' : 'bg-white/90 text-plum border-border'}`}>
+                                                {t.type}
+                                            </span>
+                                        </div>
+                                        <h3 className="font-card-title text-card-title text-plum mb-2">{t.title}</h3>
+                                        <p className="font-body-sm text-body-sm text-secondary mb-4 min-h-[42px]">{t.desc}</p>
+                                        <div className="mt-auto space-y-4">
+                                            <div className={`p-3 rounded-lg border ${t.isSpecial ? 'bg-white border-primary-fixed' : 'bg-surface border-border/50'}`}>
+                                                <span className={`block font-label-caps text-label-caps mb-1 ${t.isSpecial ? 'text-plum' : 'text-muted-text'}`}>{t.isSpecial ? 'SPECIALIZED' : 'BEST FIT'}</span>
+                                                <p className="font-body-sm text-body-sm text-ink leading-tight">{t.fit}</p>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <span className={`material-symbols-outlined text-[18px] ${t.isSpecial ? 'text-plum' : 'text-muted-text'}`}>{t.isSpecial ? 'calendar_month' : 'schedule'}</span>
+                                                <span className={`font-body-sm text-body-sm ${t.isSpecial ? 'text-plum font-semibold' : 'text-muted-text'}`}>{t.schedule}</span>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <button
+                                                    onClick={() => navigate(`/tutors/${t.id}`)}
+                                                    className="w-full py-3 rounded-lg font-button-text text-button-text border border-plum text-plum hover:bg-plum hover:text-white transition-all"
+                                                >
+                                                    View profile
+                                                </button>
+                                                <button
+                                                    onClick={scrollToCalendar}
+                                                    className={`w-full py-3 rounded-lg font-button-text text-button-text transition-all ${t.isSpecial ? 'bg-plum text-white hover:opacity-90' : 'bg-black text-white hover:bg-plum'}`}
+                                                >
+                                                    Calendar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Shared Tutor Calendar */}
+                    <section id="tutor-calendar" className="py-16 bg-surface-container-low border-y border-border scroll-mt-24">
+                        <div className="max-w-7xl mx-auto px-gutter">
+                            <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 items-start">
+                                <div className="bg-white border border-border rounded-xl p-8">
+                                    <span className="font-label-caps text-label-caps text-plum">Live tutor calendar</span>
+                                    <h2 className="font-section-heading text-section-heading text-plum mt-3 mb-4">Pick the rhythm before you pay.</h2>
+                                    <p className="font-body-lg text-body-lg text-secondary mb-8">
+                                        Parents can choose multiple weekly slots. A 12-session month can run as 3 sessions per week, while 8 sessions can run as 2 per week.
+                                    </p>
+                                    <div className="grid grid-cols-3 gap-3 mb-6">
+                                        {[4, 8, 12].map(count => (
+                                            <button
+                                                key={count}
+                                                onClick={() => { setMonthlySessions(count); setSelectedSlots([]); setWeeklyPlan(count === 12 ? 3 : count === 8 ? 2 : 1); }}
+                                                className={`border rounded-lg p-4 text-left transition-all ${monthlySessions === count ? 'border-plum bg-violet-panel text-plum' : 'border-border bg-white text-secondary hover:border-plum'}`}
+                                            >
+                                                <span className="block font-section-heading text-[24px]">{count}</span>
+                                                <span className="font-body-sm text-body-sm">sessions/mo</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <div className="flex flex-wrap gap-2 mb-8">
+                                        {[1, 2, 3].map(count => (
+                                            <button
+                                                key={count}
+                                                onClick={() => setWeeklyPlan(count)}
+                                                className={`px-4 py-2 border rounded-lg font-button-text text-sm ${weeklyPlan === count ? 'bg-plum text-white border-plum' : 'bg-white border-border text-plum hover:border-plum'}`}
+                                            >
+                                                {count}x/week
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <div className="border border-primary-fixed bg-violet-panel rounded-lg p-4">
+                                        <p className="font-button-text text-plum mb-1">{selectedSlots.length} of {monthlySessions} monthly slots selected</p>
+                                        <p className="font-body-sm text-secondary">Tutor slots can be claimed by the parent and then confirmed after package checkout.</p>
+                                    </div>
+                                    <div className="mt-4 border border-border rounded-lg p-4">
+                                        <p className="font-button-text text-plum mb-2">Cal.com connection</p>
+                                        <p className="font-body-sm text-muted-text">
+                                            Add each tutor's Cal.com event link and this area will use live tutor availability instead of the fallback planning grid.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="bg-white border border-border rounded-xl p-6">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        {calendarSlots.map(slot => {
+                                            const active = selectedSlots.includes(slot.id);
+                                            return (
+                                                <button
+                                                    key={slot.id}
+                                                    onClick={() => toggleSlot(slot)}
+                                                    disabled={slot.booked}
+                                                    className={`text-left border rounded-lg p-4 transition-all ${slot.booked ? 'border-border bg-surface-container text-muted-text line-through opacity-60 cursor-not-allowed' : active ? 'border-plum bg-plum text-white' : 'border-border bg-white hover:border-plum hover:bg-violet-panel'}`}
+                                                >
+                                                    <span className="block font-label-caps text-label-caps mb-2">{slot.day} • {slot.date} • {slot.time}</span>
+                                                    <span className="block font-button-text text-button-text">{slot.tutor}</span>
+                                                    <span className={`block font-body-sm text-body-sm mt-1 ${active ? 'text-white/80' : 'text-muted-text'}`}>{slot.subject}</span>
+                                                    <span className={`inline-flex mt-4 text-xs font-bold ${slot.booked ? 'text-error' : active ? 'text-white' : 'text-success'}`}>
+                                                        {slot.booked ? 'Booked' : active ? 'Selected' : 'Available'}
+                                                    </span>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                    <button
+                                        onClick={continueToPackages}
+                                        className="w-full mt-6 bg-plum text-white py-4 rounded-lg font-button-text text-button-text hover:opacity-90 transition-all"
+                                    >
+                                        Continue to packages
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Process Strip */}
+                    <section className="bg-violet-panel border-y border-primary-fixed/30 py-16">
+                        <div className="max-w-7xl mx-auto px-gutter">
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                                {[
+                                    { step: 1, title: 'Browse profiles', desc: 'Review tutor specializations and teaching styles.' },
+                                    { step: 2, title: 'View availability', desc: 'Check real-time calendars for your schedule.' },
+                                    { step: 3, title: 'Choose package', desc: 'Select your session tier or use existing credit.' },
+                                    { step: 4, title: 'Pay to confirm', desc: 'Complete checkout to lock in your booking.' }
+                                ].map((item) => (
+                                    <div key={item.step} className="flex flex-col items-center text-center">
+                                        <div className="w-12 h-12 rounded-full bg-white border border-primary-fixed flex items-center justify-center text-plum font-bold mb-4 shadow-sm">{item.step}</div>
+                                        <h4 className="font-button-text text-button-text text-plum mb-2">{item.title}</h4>
+                                        <p className="font-body-sm text-body-sm text-secondary">{item.desc}</p>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="mt-12 text-center">
+                                <p className="font-body-sm text-body-sm text-muted-text italic">
+                                    Profiles and availability can be viewed before payment. Bookings are confirmed after Stripe checkout or remaining-session verification.
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            );
+        };
+
+        const MatchPage = () => {
+            const navigate = useNavigate();
+            const [matchForm, setMatchForm] = useState({
+                subject: '',
+                grade: '11th Grade',
+                goal: 'Exam Preparation',
+                style: 'Visual / Concepts',
+                weekdayPm: true,
+                weekendAm: false,
+                notes: ''
+            });
+            const [rankedMatches, setRankedMatches] = useState([]);
+            const [matchSummary, setMatchSummary] = useState('');
+            const [matchSource, setMatchSource] = useState('');
+            const [matchLoading, setMatchLoading] = useState(false);
+
+            const gradeLevels = [
+                'Pre-K', 'Kindergarten', '1st Grade', '2nd Grade', '3rd Grade', '4th Grade', '5th Grade',
+                '6th Grade', '7th Grade', '8th Grade', '9th Grade', '10th Grade', '11th Grade', '12th Grade',
+                'College Freshman', 'College Sophomore', 'College Junior', 'College Senior'
+            ];
+
+            const updateMatchForm = (field, value) => {
+                setMatchForm(prev => ({ ...prev, [field]: value }));
+            };
+
+            const scoreTutor = (tutor) => {
+                const subject = matchForm.subject.toLowerCase();
+                const haystack = `${tutor.title} ${tutor.type} ${tutor.desc} ${tutor.fit} ${tutor.subjects.join(' ')} ${tutor.style}`.toLowerCase();
+                let score = 68;
+                const reasons = [];
+
+                if (subject && haystack.includes(subject.split(' ')[0])) {
+                    score += 16;
+                    reasons.push('Subject overlap');
+                }
+                if ((subject.includes('sat') || subject.includes('act') || matchForm.goal === 'Exam Preparation') && tutor.id === 'testprep') {
+                    score += 18;
+                    reasons.push('Test-prep fit');
+                }
+                if ((subject.includes('essay') || subject.includes('writing') || subject.includes('english') || matchForm.style === 'Analytical / Writing') && tutor.id === 'humanities') {
+                    score += 18;
+                    reasons.push('Writing fit');
+                }
+                if ((subject.includes('math') || subject.includes('calculus') || subject.includes('bio') || subject.includes('chem') || subject.includes('physics') || subject.includes('stem')) && tutor.id === 'stem') {
+                    score += 18;
+                    reasons.push('STEM fit');
+                }
+                if (matchForm.weekdayPm && tutor.schedule.toLowerCase().includes('evening')) {
+                    score += 6;
+                    reasons.push('Weekday PM');
+                }
+                if (matchForm.weekendAm && tutor.schedule.toLowerCase().includes('weekend')) {
+                    score += 6;
+                    reasons.push('Weekend availability');
+                }
+
+                return {
+                    tutor: tutor,
+                    score: Math.min(score, 99),
+                    reasons: reasons.length ? reasons : ['General academic fit', 'Profile reviewed']
+                };
+            };
+
+            const fallbackMatches = () => {
+                const ranked = TUTOR_PROFILES
+                    .map(scoreTutor)
+                    .sort((a, b) => b.score - a.score);
+                setRankedMatches(ranked);
+                setMatchSummary(`Based on ${matchForm.subject || 'the student profile'}, ${matchForm.grade}, and ${matchForm.style}, Apex Minds ranked tutors by subject overlap, goal fit, availability, and profile strength.`);
+                setMatchSource('Built-in match');
+            };
+
+            const findMatches = async () => {
+                setMatchLoading(true);
+                setMatchSummary('');
+                setMatchSource('');
+                try {
+                    const response = await fetch('/api/match', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            profile: matchForm,
+                            tutors: TUTOR_PROFILES.map(tutor => ({
+                                id: tutor.id,
+                                title: tutor.title,
+                                type: tutor.type,
+                                desc: tutor.desc,
+                                fit: tutor.fit,
+                                schedule: tutor.schedule,
+                                tier: tutor.tier,
+                                subjects: tutor.subjects,
+                                style: tutor.style,
+                                isSpecial: !!tutor.isSpecial
+                            }))
+                        })
+                    });
+                    const data = await response.json();
+                    if (data && data.source === 'gemini' && data.matches && data.matches.length) {
+                        const merged = data.matches
+                            .map(match => {
+                                const tutor = TUTOR_PROFILES.find(item => item.id === match.tutorId);
+                                if (!tutor) return null;
+                                return {
+                                    tutor: tutor,
+                                    score: match.score || 90,
+                                    reasons: match.reasons && match.reasons.length ? match.reasons : ['Gemini recommended'],
+                                    explanation: match.explanation || ''
+                                };
+                            })
+                            .filter(Boolean);
+                        setRankedMatches(merged);
+                        setMatchSummary(data.summary || 'Gemini ranked the best tutor fits from the student profile.');
+                        setMatchSource('Gemini AI match');
+                    } else {
+                        fallbackMatches();
+                    }
+                } catch (_error) {
+                    fallbackMatches();
+                }
+                setMatchLoading(false);
+            };
+            return (
+                <main className="min-h-[calc(100vh-73px)] flex flex-col md:flex-row grain-overlay">
+                    {/* Left Pane: Operational Narrative */}
+                    <aside className="md:w-1/2 bg-surface-container-low border-r border-outline-variant md:sticky md:top-[73px] md:h-[calc(100vh-73px)] overflow-y-auto hide-scrollbar">
+                        <div className="max-w-[430px] mx-auto px-gutter py-12 md:py-20 flex flex-col gap-stack-lg">
+                            <header className="space-y-4 reveal-up">
+                                <span className="font-label-caps text-label-caps text-plum uppercase tracking-widest">03 / Gemini ranking</span>
+                                <h1 className="font-section-heading text-section-heading text-plum">Match with the right tutor.</h1>
+                                <p className="font-body-lg text-body-lg text-secondary">Tell us what the student needs. Apex Minds reviews the fit, then you book directly with the matched tutor.</p>
+                            </header>
+                            {/* Three Step Flow */}
+                            <div className="space-y-6">
+                                <div className="flex items-start gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-plum text-white flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
+                                    <div>
+                                        <h3 className="font-card-title text-card-title text-plum">Tell us the goal</h3>
+                                        <p className="font-body-sm text-body-sm text-secondary">Complete the matching profile with student details and academic objectives.</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-plum text-white flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
+                                    <div>
+                                        <h3 className="font-card-title text-card-title text-plum">AP reviews the fit</h3>
+                                        <p className="font-body-sm text-body-sm text-secondary">Our academic directors at Apex Minds manually verify compatibility between your needs and our tutor roster.</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-plum text-white flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
+                                    <div>
+                                        <h3 className="font-card-title text-card-title text-plum">Book with the matched tutor</h3>
+                                        <p className="font-body-sm text-body-sm text-secondary">Receive a personalized calendar link to schedule your sessions at your convenience.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* Operational Details */}
+                            <div className="bg-blue-surface/30 p-6 rounded-xl border border-blue-surface space-y-4">
+                                <h4 className="font-label-caps text-label-caps text-plum uppercase">Operational Logistics</h4>
+                                <ul className="space-y-3">
+                                    <li className="flex items-center gap-3 font-body-sm text-body-sm text-plum">
+                                        <span className="material-symbols-outlined text-[20px]">video_call</span>
+                                        Sessions online via Microsoft Teams
+                                    </li>
+                                    <li className="flex items-center gap-3 font-body-sm text-body-sm text-plum">
+                                        <span className="material-symbols-outlined text-[20px]">event</span>
+                                        Tutors set their own availability weekly
+                                    </li>
+                                    <li className="flex items-center gap-3 font-body-sm text-body-sm text-plum">
+                                        <span className="material-symbols-outlined text-[20px]">calendar_month</span>
+                                        Clients book via matched tutor calendar
+                                    </li>
+                                    <li className="flex items-center gap-3 font-body-sm text-body-sm text-plum"><span className="material-symbols-outlined text-[20px]">school</span>Admissions consulting is handled separately by Apex Minds</li>
+                                </ul>
+                            </div>
+                            <div className="mt-4">
+                                <img className="w-full rounded-xl border border-outline-variant shadow-sm aspect-video object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFEOyX_vic2fiYOua0NVulCr7HFEBIooVp6LpPT7OWAI41t_nXU7XMxQpe5AnpLRuX8HLws6pJjBsiYEQxMI8jI1oEE6FX8-2soYOlK-FhpAgWdeK44G-FKcNUbZDcEY-Yz_2T38wT-vV1uLdgTIZkZBdHioRI0ggDOt8HjdIU7T9R9N-T4XNGVLvqOYS9cK4p62J9YCV4FAY9_QYDqvoutuGv5r6KykydOdIAQcn0ogg7tNnjeT-VsLSQQ7Df6oJzypFXYXByIQ" alt="Workspace" />
+                            </div>
+                        </div>
+                    </aside>
+                    {/* Right Pane: Interactive Matching */}
+                    <section className="md:w-1/2 bg-surface-container-lowest">
+                        <div className="max-w-[560px] mx-auto px-gutter py-12 md:py-20 flex flex-col gap-stack-lg">
+                            {/* Form Section */}
+                            <div className="space-y-stack-md reveal-up reveal-delay-1">
+                                <h2 className="font-section-heading text-section-heading text-plum">Tell us about the student</h2>
+                                <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="font-label-caps text-label-caps text-plum">Subject Area</label>
+                                            <input value={matchForm.subject} onChange={(e) => updateMatchForm('subject', e.target.value)} className="w-full border border-border rounded-lg p-3 font-body-lg focus:ring-2 focus:ring-plum/20 focus:border-plum outline-none transition-all" placeholder="e.g. AP Calculus, SAT Prep" type="text" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="font-label-caps text-label-caps text-plum">Grade Level</label>
+                                            <select value={matchForm.grade} onChange={(e) => updateMatchForm('grade', e.target.value)} className="w-full border border-border rounded-lg p-3 font-body-lg focus:ring-2 focus:ring-plum/20 focus:border-plum outline-none transition-all bg-white">
+                                                {gradeLevels.map(level => <option key={level}>{level}</option>)}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="font-label-caps text-label-caps text-plum">Primary Goal</label>
+                                        <select value={matchForm.goal} onChange={(e) => updateMatchForm('goal', e.target.value)} className="w-full border border-border rounded-lg p-3 font-body-lg focus:ring-2 focus:ring-plum/20 focus:border-plum outline-none transition-all bg-white">
+                                            <option>GPA Maintenance</option>
+                                            <option>Exam Preparation</option>
+                                            <option>Skill Mastery</option>
+                                            <option>College Readiness</option>
+                                        </select>
+                                    </div>
+                                    <div className="space-y-3">
+                                        <label className="font-label-caps text-label-caps text-plum">Learning Style</label>
+                                        <div className="flex flex-wrap gap-4">
+                                            <label className="flex items-center gap-2 cursor-pointer group">
+                                                <input checked={matchForm.style === 'Visual / Concepts'} onChange={() => updateMatchForm('style', 'Visual / Concepts')} className="text-plum focus:ring-plum h-4 w-4" name="style" type="radio" />
+                                                <span className="font-body-sm text-body-sm group-hover:text-plum">Visual / Concepts</span>
+                                            </label>
+                                            <label className="flex items-center gap-2 cursor-pointer group">
+                                                <input checked={matchForm.style === 'Practical / Drills'} onChange={() => updateMatchForm('style', 'Practical / Drills')} className="text-plum focus:ring-plum h-4 w-4" name="style" type="radio" />
+                                                <span className="font-body-sm text-body-sm group-hover:text-plum">Practical / Drills</span>
+                                            </label>
+                                            <label className="flex items-center gap-2 cursor-pointer group">
+                                                <input checked={matchForm.style === 'Analytical / Writing'} onChange={() => updateMatchForm('style', 'Analytical / Writing')} className="text-plum focus:ring-plum h-4 w-4" name="style" type="radio" />
+                                                <span className="font-body-sm text-body-sm group-hover:text-plum">Analytical / Writing</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-3">
+                                        <label className="font-label-caps text-label-caps text-plum">Availability</label>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <label className="flex items-center gap-2 border border-border p-3 rounded-lg hover:bg-violet-panel transition-colors cursor-pointer">
+                                                <input checked={matchForm.weekdayPm} onChange={(e) => updateMatchForm('weekdayPm', e.target.checked)} className="rounded text-plum focus:ring-plum" type="checkbox" />
+                                                <span className="font-body-sm text-body-sm">Weekdays (PM)</span>
+                                            </label>
+                                            <label className="flex items-center gap-2 border border-border p-3 rounded-lg hover:bg-violet-panel transition-colors cursor-pointer">
+                                                <input checked={matchForm.weekendAm} onChange={(e) => updateMatchForm('weekendAm', e.target.checked)} className="rounded text-plum focus:ring-plum" type="checkbox" />
+                                                <span className="font-body-sm text-body-sm">Weekends (AM)</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="font-label-caps text-label-caps text-plum">Notes for the academic team</label>
+                                        <textarea value={matchForm.notes} onChange={(e) => updateMatchForm('notes', e.target.value)} className="w-full border border-border rounded-lg p-3 font-body-lg focus:ring-2 focus:ring-plum/20 focus:border-plum outline-none transition-all" placeholder="Tell us more about specific challenges or preferred tutor traits..." rows="3"></textarea>
+                                    </div>
+                                    <div className="flex flex-col gap-4 pt-4">
+                                        <button type="button" onClick={findMatches} className="bg-plum text-white w-full py-4 rounded-xl font-button-text text-button-text hover:shadow-lg transition-all active:scale-[0.99] magnetic-button">
+                                            {matchLoading ? 'Analyzing tutor fit...' : 'Find My Expert Match'}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            {/* AI Generated Summary */}
+                            <div className="bg-plum/5 border border-plum/10 rounded-xl p-6 space-y-4 motion-card reveal-up reveal-delay-2">
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-plum text-[20px]">auto_awesome</span>
+                                    <h3 className="font-card-title text-body-lg font-bold text-plum">AI Fit Analysis</h3>
+                                </div>
+                                <p className="font-body-sm text-secondary leading-relaxed italic">
+                                    {matchSummary
+                                        ? `"${matchSummary}"`
+                                        : '"Enter the student profile and Apex Minds will rank tutor options by subject overlap, learning style, availability, and goal fit."'}
+                                </p>
+                                {matchSource && <div className="font-label-caps text-label-caps text-success">{matchSource}</div>}
+                                <div className="flex items-center gap-2">
+                                    <div className="flex -space-x-2">
+                                        <div className="w-6 h-6 rounded-full bg-plum border-2 border-white flex items-center justify-center text-[10px] text-white">AP</div>
+                                        <div className="w-6 h-6 rounded-full bg-secondary border-2 border-white"></div>
+                                    </div>
+                                    <span className="text-[11px] font-medium text-plum/60 uppercase tracking-wider">Verified by Academic Directors</span>
+                                </div>
+                            </div>
+
+                            {/* Match Results (Simulated Preview) */}
+                            <div className="pt-12 border-t border-outline-variant space-y-6">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="font-card-title text-card-title text-plum">Ranked Tutor Matches</h3>
+                                    <span className="font-label-caps text-label-caps text-muted-text">BASED ON YOUR PROFILE</span>
+                                </div>
+                                <div className="grid grid-cols-1 gap-4">
+                                    {(rankedMatches.length > 0 ? rankedMatches : TUTOR_PROFILES.map((t, idx) => ({ tutor: t, score: 94 - idx * 7, reasons: ['Profile available', 'Ready for ranking'] }))).map((match, index) => (
+                                        <div key={match.tutor.id} className={`p-6 border rounded-xl transition-all bg-white motion-card ${index === 0 && rankedMatches.length > 0 ? 'border-plum bg-violet-panel' : 'border-border hover:border-plum/40'}`}>
+                                            <div className="flex justify-between items-start gap-4 mb-4">
+                                                <div>
+                                                    <h4 className="font-card-title text-card-title text-plum">{index + 1}. {match.tutor.title}</h4>
+                                                    <p className="font-body-sm text-body-sm text-secondary">{match.tutor.subjects.join(', ')}</p>
+                                                </div>
+                                                <div className="bg-success/10 text-success text-[10px] font-bold px-2 py-1 rounded uppercase">{match.score}% Fit</div>
+                                            </div>
+                                            <div className="flex flex-wrap gap-3 mb-5">
+                                                {match.reasons.slice(0, 3).map(reason => (
+                                                    <div key={reason} className="flex items-center gap-1 text-success">
+                                                        <span className="material-symbols-outlined text-[16px]" style={{fontVariationSettings: "'FILL' 1"}}>check_circle</span>
+                                                        <span className="text-[12px] font-medium">{reason}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            {match.explanation && <p className="font-body-sm text-body-sm text-secondary mb-5">{match.explanation}</p>}
+                                            <button onClick={() => navigate(`/tutors/${match.tutor.id}`)} className="w-full border border-plum text-plum py-3 rounded-lg font-button-text hover:bg-plum hover:text-white transition-all">
+                                                View profile and calendar
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <div className="p-6 bg-violet-panel border border-plum/20 rounded-xl relative overflow-hidden group cursor-pointer" onClick={() => navigate('/admissions')}>
+                                        <div className="relative z-10 flex justify-between items-center">
+                                            <div>
+                                                <h4 className="font-card-title text-card-title text-plum">Admissions Consulting</h4>
+                                                <p className="font-body-sm text-body-sm text-secondary">Seasonal application strategy with Apex Minds</p>
+                                            </div>
+                                            <span className="material-symbols-outlined text-plum opacity-50 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mt-stack-lg p-6 bg-surface-container rounded-xl">
+                                <p className="font-body-sm text-body-sm text-on-surface-variant italic">"The matching process ensures we don't just find a teacher, but a mentor who resonates with the student's unique learning architecture." — Dr. Aris, Founding Director</p>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            );
+        };
+
+        const PackagesPage = () => {
+            const navigate = useNavigate();
+            const { addToCart, selectedBooking } = useContext(AppContext);
+            const selectedBookingTier = selectedBooking && selectedBooking.tier ? selectedBooking.tier : 'testprep';
+            const selectedBookingSessions = selectedBooking && selectedBooking.monthlySessions ? selectedBooking.monthlySessions : null;
+            const tierLabels = {
+                standard: 'Standard',
+                testprep: 'Test Prep',
+                advanced: 'Advanced Placement'
+            };
+            const bookingLocksTier = selectedBooking && selectedBooking.tutorId;
+            const [selectedTier, setSelectedTier] = useState(selectedBookingTier);
+            const [addedId, setAddedId] = useState(null);
+            const [sessions, setSessions] = useState({
+                standard: selectedBookingTier === 'standard' && selectedBookingSessions ? selectedBookingSessions : 8,
+                testprep: selectedBookingTier === 'testprep' && selectedBookingSessions ? selectedBookingSessions : 12,
+                advanced: selectedBookingTier === 'advanced' && selectedBookingSessions ? selectedBookingSessions : 8
+            });
+
+            const packageLinks = {
+                standard: {
+                    4: { url: 'https://buy.stripe.com/7sYcN537agBQaos6nX0sU00', label: 'Standard' },
+                    8: { url: 'https://buy.stripe.com/3cIbJ10Z21GWfIM3bL0sU01', label: 'Standard' },
+                    12: { url: 'https://buy.stripe.com/3cI8wP4beclAaos5jT0sU02', label: 'Standard' }
+                },
+                testprep: {
+                    4: { url: 'https://buy.stripe.com/5kQ8wP4be99o2W08w50sU0c', label: 'Test Prep' },
+                    8: { url: 'https://buy.stripe.com/cNi3cvbDG2L0bswdQp0sU0b', label: 'Test Prep' },
+                    12: { url: 'https://buy.stripe.com/14AfZhazCfxMfIM9A90sU0d', label: 'Test Prep' }
+                },
+                advanced: {
+                    4: { url: 'https://buy.stripe.com/dRmbJ17nqclA5488w50sU06', label: 'Advanced Placement' },
+                    8: { url: 'https://buy.stripe.com/8x214nePS5Xcaos7s10sU07', label: 'Advanced Placement' },
+                    12: { url: 'https://buy.stripe.com/eVq7sLePS2L0gMQdQp0sU08', label: 'Advanced Placement' }
+                }
+            };
+
+            const pricingData = {
+                standard: {
+                    4: { price: 148, rate: 37, savings: 32, walkin: 45 },
+                    8: { price: 280, rate: 35, savings: 80, walkin: 45 },
+                    12: { price: 396, rate: 33, savings: 144, walkin: 45 }
+                },
+                testprep: {
+                    4: { price: 267, rate: 67, savings: 53, walkin: 80 },
+                    8: { price: 533, rate: 67, savings: 107, walkin: 80 },
+                    12: { price: 800, rate: 67, savings: 160, walkin: 80 }
+                },
+                advanced: {
+                    4: { price: 188, rate: 47, savings: 32, walkin: 55 },
+                    8: { price: 352, rate: 44, savings: 88, walkin: 55 },
+                    12: { price: 504, rate: 42, savings: 156, walkin: 55 }
+                }
+            };
+
+            const updateSession = (tier, val) => {
+                if (bookingLocksTier && tier !== selectedBookingTier) return;
+                setSessions(prev => ({ ...prev, [tier]: val }));
+                setSelectedTier(tier);
+            };
+
+            const TierCard = ({ id, name, bestValue, popular, features }) => {
+                const currentSessions = sessions[id];
+                const data = pricingData[id][currentSessions];
+                const isActive = selectedTier === id;
+                const isBestValue = bestValue === currentSessions;
+                const isLockedOut = bookingLocksTier && id !== selectedBookingTier;
+
+                const handleAddToCart = (e) => {
+                    e.stopPropagation();
+                    if (isLockedOut) return;
+                    const pkg = {
+                        id: id,
+                        name: name,
+                        sessions: currentSessions,
+                        price: data.price,
+                        url: packageLinks[id][currentSessions].url,
+                        booking: selectedBooking
+                    };
+                    addToCart(pkg);
+                    setAddedId(id);
+                    setTimeout(() => setAddedId(null), 1500);
+                };
+
+                return (
+                    <div className={`bg-surface-container-lowest border p-stack-md flex flex-col transition-all duration-300 rounded-lg relative motion-card reveal-up ${isActive ? 'active-tier' : 'border-border'} ${isLockedOut ? 'tier-locked' : ''}`} onClick={() => { if (!isLockedOut) setSelectedTier(id); }}>
+                        {popular && <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-plum text-white font-label-caps text-label-caps px-4 py-1.5 rounded-full">POPULAR CHOICE</div>}
+                        <div className="flex justify-between items-start mb-6">
+                            <div>
+                                <span className="font-label-caps text-label-caps text-muted-text uppercase tracking-widest">Tutoring Tier</span>
+                                <h3 className="font-card-title text-card-title text-primary mt-1 uppercase">{name}</h3>
+                            </div>
+                            <div className="text-right">
+                                <span className="font-body-sm text-body-sm text-muted-text line-through">${data.walkin}/hr</span>
+                                <div className="font-label-caps text-label-caps text-success font-bold">WALK-IN RATE</div>
+                            </div>
+                        </div>
+
+                        {/* Session Selector */}
+                        <div className="flex items-center justify-between bg-surface-container p-2 rounded-lg mb-8">
+                            {[4, 8, 12].map(num => (
+                                <button 
+                                    key={num}
+                                    disabled={isLockedOut}
+                                    className={`flex-1 py-2 font-button-text text-button-text rounded transition-all relative ${currentSessions === num ? 'selector-btn-active' : 'text-secondary hover:bg-white'} ${isLockedOut ? 'cursor-not-allowed' : ''}`}
+                                    onClick={(e) => { e.stopPropagation(); updateSession(id, num); }}
+                                >
+                                    {num}
+                                    {id === 'standard' && num === 8 && <span className="absolute -top-6 left-1/2 -translate-x-1/2 bg-success text-white text-[10px] px-2 py-0.5 rounded-full font-bold">BEST VALUE</span>}
+                                </button>
+                            ))}
+                        </div>
+
+                        <div className="mb-8 h-32">
+                            <div className="font-price-display text-price-display text-plum">${data.price}<span className="text-[20px] font-normal text-muted-text">/mo</span></div>
+                            <div className="font-body-sm text-body-sm text-success mt-2 font-semibold">(${data.rate}/hr) • You save ${data.savings} total</div>
+                        </div>
+
+                        <ul className="space-y-4 mb-10 flex-grow">
+                            {features.map((f, i) => (
+                                <li key={i} className="flex items-center gap-3 font-body-sm text-on-surface-variant">
+                                    <span className="material-symbols-outlined text-success text-[20px]">check_circle</span>
+                                    {f}
+                                </li>
+                            ))}
+                        </ul>
+
+                        {isLockedOut ? (
+                            <div className="w-full bg-surface-container text-muted-text py-4 rounded font-button-text text-button-text text-center border border-border">
+                                Not valid for selected tutor
+                            </div>
+                        ) : (
+                            <a 
+                                className="w-full bg-plum text-white py-4 rounded font-button-text text-button-text hover:opacity-90 transition-opacity text-center inline-block magnetic-button" 
+                                href={packageLinks[id][currentSessions].url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Pay for {packageLinks[id][currentSessions].label} {currentSessions} sessions
+                            </a>
+                        )}
+                        <button 
+                            onClick={handleAddToCart}
+                            disabled={isLockedOut}
+                            className={`w-full mt-2 border py-2 rounded font-button-text text-button-text transition-colors ${isLockedOut ? 'border-border text-muted-text cursor-not-allowed' : addedId === id ? 'bg-success text-white border-success' : 'border-plum text-plum hover:bg-surface-container'}`}
+                        >
+                            {isLockedOut ? 'Tier locked' : addedId === id ? 'Added' : 'Add to Cart'}
+                        </button>
+                    </div>
+                );
+            };
+
+            return (
+                <main className="pt-24 pb-stack-lg grain-overlay">
+                    <div className="max-w-[1280px] mx-auto px-gutter">
+                        <div className="mb-stack-lg text-center md:text-left reveal-up">
+                            <span className="font-label-caps text-label-caps text-plum uppercase tracking-widest mb-4 block">04 / Monthly packages</span>
+                            <h1 className="font-section-heading text-[42px] leading-tight text-primary mb-4">Choose the package for this month.</h1>
+                            <p className="font-body-lg text-on-surface-variant max-w-2xl">
+                                Clear monthly sessions for Apex Minds students. Recommended plans highlighted. Checkout routes to Stripe for secure payment.
+                            </p>
+                        </div>
+
+                        {selectedBooking && (
+                            <div className="mb-8 tier-lock-banner border border-primary-fixed rounded-xl p-6 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 items-center motion-card">
+                                <div>
+                                    <span className="font-label-caps text-label-caps text-white/70">Selected booking</span>
+                                    <h2 className="font-card-title text-card-title text-white mt-2">{selectedBooking.tutorName}</h2>
+                                    <p className="font-body-sm text-white/70 mt-1">
+                                        {selectedBooking.monthlySessions} sessions/month • {selectedBooking.weeklyPlan}x/week • {selectedBooking.slots.length} calendar slots selected
+                                    </p>
+                                    <p className="font-body-sm text-white mt-3">
+                                        This booking requires the <strong>{tierLabels[selectedBookingTier]}</strong> package. Other tiers are locked to prevent mismatched tutor/payment selections.
+                                    </p>
+                                </div>
+                                <button onClick={() => navigate('/tutors')} className="border border-white/40 text-white px-5 py-3 rounded-lg font-button-text hover:bg-white hover:text-plum transition-all">
+                                    Edit calendar
+                                </button>
+                            </div>
+                        )}
+
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-stack-lg">
+                            <TierCard 
+                                id="standard" 
+                                name="STANDARD" 
+                                bestValue={8}
+                                features={[
+                                    "K-12 Core Subject Support",
+                                    "Curriculum-aligned tutoring",
+                                    "Monthly progress reports"
+                                ]}
+                            />
+                            <TierCard 
+                                id="testprep" 
+                                name="TEST PREP SAT/ACT" 
+                                popular 
+                                features={[
+                                    "Certified SAT/ACT Strategists",
+                                    "Full-length proctored exams",
+                                    "Personalized score improvement roadmap"
+                                ]}
+                            />
+                            <TierCard 
+                                id="advanced" 
+                                name="ADVANCED PLACEMENT" 
+                                features={[
+                                    "Advanced Placement Specialists",
+                                    "College Board syllabus focus",
+                                    "FRQ and MCQ mastery drills"
+                                ]}
+                            />
+                        </div>
+
+                        <div className="bg-violet-panel border border-primary-fixed p-8 md:p-12 rounded-xl flex flex-col md:flex-row items-center gap-12 mb-stack-lg border-2 border-plum relative">
+                            <div className="absolute -top-4 left-8 bg-plum text-white font-label-caps text-label-caps px-4 py-1.5 rounded-full shadow-lg z-10 flex items-center gap-2">
+                                <span className="material-symbols-outlined text-[16px]">priority_high</span>Update: Only 3 spots left!!
+                            </div>
+                            <div className="flex-1">
+                                <span className="font-label-caps text-label-caps text-plum bg-primary-fixed px-3 py-1 rounded mb-4 inline-block">PREMIUM ADVISORY</span>
+                                <h2 className="font-section-heading text-section-heading text-primary mb-4">Admissions Consulting</h2>
+                                <p className="font-body-sm text-muted-text mb-6">Apex Minds handles admissions consulting directly; multiple T30 colleges and premium insider advice</p>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 mb-8">
+                                    {["Application strategy", "College list direction", "Essay brainstorming", "Activity positioning", "Deadline roadmap", "Student check-ins"].map(item => (
+                                        <div key={item} className="flex items-center gap-2 font-body-sm text-on-surface">
+                                            <span className="material-symbols-outlined text-plum text-[18px]">star_rate</span>
+                                            {item}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="w-full md:w-80 bg-white border border-border p-6 rounded-lg text-center">
+                                <div className="font-label-caps text-label-caps text-muted-text mb-2">SEASONAL PACKAGE</div>
+                                <div className="font-price-display-mobile text-price-display-mobile text-plum mb-6">$400 <span class="text-sm text-muted-foreground">(was $550)</span></div>
+                                <button onClick={() => ADMISSIONS_CHECKOUT_URL ? window.open(ADMISSIONS_CHECKOUT_URL, '_blank') : alert('Admissions Stripe payment link is not connected yet. Create the $400 Stripe Payment Link and I will plug it in here.')} className="w-full border-2 border-plum text-plum py-3 rounded font-button-text text-button-text hover:bg-plum hover:text-white transition-all">Pay admissions consult</button>
+                                <p className="mt-4 font-body-sm text-[12px] text-muted-text">Apex Minds handles admissions consulting directly; checkout is a $400 seasonal admissions package (was $550).</p>
+                            </div>
+                        </div>
+
+                        <div className="border-t border-border pt-stack-md">
+                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                                <p className="font-body-sm text-muted-text italic">
+                                    <span className="material-symbols-outlined text-[18px] mr-1">info</span> All packages are billed monthly. Cancel anytime.
+                                </p>
+                                <div className="flex items-center gap-6">
+                                    <img alt="Stripe Logo" className="h-6 opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFjjoDfySW4sBHRB5SjzDMxRT35vRng-svitt3M7b2cP5EiT2KJNAi84w2TFmL6pGKW-YzmYvpbkXTp1xoF8DK_wgd5yB_k9VhAjRuGntSDxSOh5sWRUW6CV3LBj12H3Fbtmp6huutBjgPR_ASUU-FTtZurNo4ocNo9CvwQ2vRB7zElNzVHQlHfLLLNk3X_QP6r17COa9zQJg2I3mp5ohB8l0GvF6epoN-Z7yNpaRXLBrzBuGXZUmRrJUlBBLg4geN9TWV58EVog" />
+                                    <span className="font-label-caps text-[10px] text-muted-text tracking-widest">SECURE CHECKOUT</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            );
+        };
+
+        const AdmissionsPage = () => {
+            const navigate = useNavigate();
+            useEffect(() => {
+                loadCalEmbed(() => {
+                    if (window.Cal) {
+                        window.Cal('inline', {
+                            elementOrSelector: '#admissions-cal-embed',
+                            calLink: ADMISSIONS_CAL_LINK,
+                            config: { layout: 'month_view' }
+                        });
+                        window.Cal('ui', { hideEventTypeDetails: false, layout: 'month_view' });
+                    }
+                });
+            }, []);
+            return (
+                <main className="min-h-screen">
+                    {/* Hero Section */}
+                    <section className="premium-hero grain-overlay grid grid-cols-1 lg:grid-cols-2 min-h-[600px] border-b border-border">
+                        <div className="bg-surface-container-low flex flex-col justify-center px-gutter py-stack-lg">
+                            <div className="max-w-[430px] mx-auto lg:ml-auto lg:mr-0 reveal-up">
+                                <span className="font-label-caps text-label-caps text-plum uppercase tracking-widest mb-4 block">Premium Advisory</span>
+                                <h1 className="font-price-display text-[48px] lg:text-[60px] leading-[1.1] text-plum mb-6">College Admissions Strategy by AP Leadership</h1>
+                                <p className="font-body-lg text-body-lg text-secondary mb-8 leading-relaxed">Exclusive, precision-engineered application roadmaps led by Anirudh Pappu. We transform high-achieving profiles into compelling narratives for the world's most selective institutions.</p>
+                                <div className="flex flex-wrap gap-4">
+                                    <a className="bg-plum text-white px-8 py-4 rounded-lg font-button-text text-button-text inline-block hover:opacity-90 transition-all cursor-pointer magnetic-button" onClick={() => document.getElementById('consultation').scrollIntoView({ behavior: 'smooth' })}>Start Your Journey</a>
+                                    <div className="flex items-center gap-2 text-success font-bold">
+                                        <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+                                        <span className="text-body-sm font-label-caps">T20 ELITE ACCESS</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="relative bg-white hidden lg:block overflow-hidden">
+                            <img className="absolute inset-0 w-full h-full object-cover grayscale-[0.2] opacity-90 image-rise" alt="Sophisticated university campus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQ0y_DqElH5py-Cz2EE-V4FUJGQO6NsMbg00QU1VfA5yMdMlZVNtWJqz-CzC0nTAn4iH8WDlg5GSyzZTL6wiehXY86U7jvhHH13QCiM6_XfmJY8Q0Hc07Mt8oterMY1bgg4jLb27qa1Oy_iY7PNdFmcAM-zEF823PSeBGPYW3_wfeqJjSqZrD6nHBIeAOw4ZpVPZewqKesjh8NzF4qD-2_XBQza73xAzftTJx9eDUk1_-mfFkA0lxXtH-ZoLNiJeScBZaGVxgPiw" />
+                            <div className="absolute inset-0 bg-plum/5"></div>
+                        </div>
+                    </section>
+
+                    {/* Admissions Tracks */}
+                    <section className="py-stack-lg px-gutter max-w-[1440px] mx-auto">
+                        <div className="text-center mb-16">
+                            <h2 className="font-section-heading text-section-heading text-plum mb-2">Selected Engagement Tracks</h2>
+                            <p className="text-secondary font-body-lg">Bespoke pathways tailored to your academic trajectory.</p>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-md max-w-5xl mx-auto">
+                            {/* Track 1 */}
+                            <div className="group border border-border p-stack-md hover:border-plum transition-all duration-300 bg-white relative cursor-pointer">
+                                <div className="absolute top-0 right-0 p-4">
+                                    <span className="material-symbols-outlined text-plum/20 group-hover:text-plum transition-colors" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
+                                </div>
+                                <h3 className="font-card-title text-card-title text-plum mb-4">Elite Entry</h3>
+                                <p className="text-body-sm text-secondary mb-6">Optimized for candidates targeting Top 20 National Universities and Ivy League institutions. Focused on differentiation in hyper-competitive pools.</p>
+                                <ul className="space-y-3 mb-8">
+                                    <li className="flex items-center gap-2 text-body-sm text-on-surface">
+                                        <span className="material-symbols-outlined text-success text-[18px]">check_circle</span>
+                                        Ivy League Narrative Alignment
+                                    </li>
+                                    <li className="flex items-center gap-2 text-body-sm text-on-surface">
+                                        <span className="material-symbols-outlined text-success text-[18px]">check_circle</span>
+                                        Supplemental Essay Mastery
+                                    </li>
+                                    <li className="flex items-center gap-2 text-body-sm text-on-surface">
+                                        <span className="material-symbols-outlined text-success text-[18px]">check_circle</span>
+                                        Interview Coaching & Prep
+                                    </li>
+                                </ul>
+                            </div>
+                            {/* Track 2 */}
+                            <div className="group border border-border p-stack-md hover:border-plum transition-all duration-300 bg-white relative cursor-pointer">
+                                <div className="absolute top-0 right-0 p-4">
+                                    <span className="material-symbols-outlined text-plum/20 group-hover:text-plum transition-colors" style={{ fontVariationSettings: "'FILL' 1" }}>trending_up</span>
+                                </div>
+                                <h3 className="font-card-title text-card-title text-plum mb-4">Strategic Growth</h3>
+                                <p className="text-body-sm text-secondary mb-6">Designed for early-stage profile building (Grades 9-11) to align academic rigor with extracurricular impact and institutional priorities.</p>
+                                <ul className="space-y-3 mb-8">
+                                    <li className="flex items-center gap-2 text-body-sm text-on-surface">
+                                        <span className="material-symbols-outlined text-success text-[18px]">check_circle</span>
+                                        Extracurricular Audit & Pivot
+                                    </li>
+                                    <li className="flex items-center gap-2 text-body-sm text-on-surface">
+                                        <span className="material-symbols-outlined text-success text-[18px]">check_circle</span>
+                                        Course Selection Strategy
+                                    </li>
+                                    <li className="flex items-center gap-2 text-body-sm text-on-surface">
+                                        <span className="material-symbols-outlined text-success text-[18px]">check_circle</span>
+                                        Summer Program Navigation
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Service Details (Split Layout) */}
+                    <section className="bg-violet-panel border-y border-border">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 max-w-[1440px] mx-auto">
+                            <div className="p-gutter lg:p-24 flex flex-col justify-center border-r border-border">
+                                <h2 className="font-section-heading text-section-heading text-plum mb-8">The AP Advisory Methodology</h2>
+                                <div className="space-y-12">
+                                    <div className="flex gap-6">
+                                        <div className="w-12 h-12 bg-plum text-white flex items-center justify-center shrink-0">
+                                            <span className="material-symbols-outlined">architecture</span>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-card-title text-card-title text-plum mb-2">Application Strategy</h4>
+                                            <p className="text-body-sm text-secondary leading-relaxed">Developing a singular, cohesive 'hook' that differentiates you from the standard high-achiever profile.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-6">
+                                        <div className="w-12 h-12 bg-plum text-white flex items-center justify-center shrink-0">
+                                            <span className="material-symbols-outlined">list_alt</span>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-card-title text-card-title text-plum mb-2">College List Direction</h4>
+                                            <p className="text-body-sm text-secondary leading-relaxed">Data-driven selection of Reach, Match, and Safety schools based on institutional priorities and fit.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-6">
+                                        <div className="w-12 h-12 bg-plum text-white flex items-center justify-center shrink-0">
+                                            <span className="material-symbols-outlined">edit_note</span>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-card-title text-card-title text-plum mb-2">Essay Brainstorming</h4>
+                                            <p className="text-body-sm text-secondary leading-relaxed">Extracting authentic narratives that resonate with admissions officers' personal values and institutional missions.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="p-gutter lg:p-24 flex flex-col justify-center">
+                                <div className="space-y-12">
+                                    <div className="flex gap-6">
+                                        <div className="w-12 h-12 bg-plum text-white flex items-center justify-center shrink-0">
+                                            <span className="material-symbols-outlined">assignment_ind</span>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-card-title text-card-title text-plum mb-2">Activity Positioning</h4>
+                                            <p className="text-body-sm text-secondary leading-relaxed">Refining the Common App activities list to emphasize leadership, duration, and measurable impact.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-6">
+                                        <div className="w-12 h-12 bg-plum text-white flex items-center justify-center shrink-0">
+                                            <span className="material-symbols-outlined">event_available</span>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-card-title text-card-title text-plum mb-2">Deadline Roadmaps</h4>
+                                            <p className="text-body-sm text-secondary leading-relaxed">Reverse-engineered schedules for ED, EA, and RD rounds to ensure zero-friction submissions.</p>
+                                        </div>
+                                    </div>
+                                    {/* Trust Signal Card */}
+                                    <div className="mt-12 p-8 bg-white border border-plum/10 border-l-4 border-l-plum shadow-sm">
+                                        <p className="font-label-caps text-plum mb-2">Investment</p>
+                                        <div className="flex items-baseline gap-2 mb-4">
+                                            <span className="font-price-display text-plum text-[32px]">$350</span>
+                                            <span className="text-secondary font-body-sm">/ Seasonal Package</span>
+                                        </div>
+                                        <p className="text-body-sm text-secondary italic">"This is more than editing; it is structural advisory for the academic elite."</p>
+                                        <div className="mt-6 flex items-center gap-3">
+                                            <img className="w-10 h-10 rounded-full object-cover" alt="Anirudh Pappu" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADCQZViTs98XlQxTzY9FYbdtyOfti9F11QmviqoJVeR7v37rmUQ8a1NvqSxyq9bTfx6uRBIgz5wwG-DUT8PPs5DllEATy7IryjZKX9jpsq0RFiPG7hMQdq3ieglrGe9ub7rXaG2GaxQa_4HbKnGZWjg7l3Db6SYBr7-5qccqFvXfMareR2h0EZjxOyGHwDXB1YIhu3FCr-n7UVVAKzlYty7tfk_aXuBh4alSVzAAnmewTIDOot-o2BptGC3nYYkChSP-sFw4tCSg" />
+                                            <div>
+                                                <p className="font-label-caps text-plum text-[11px] font-bold">ANIRUDH PAPPU</p>
+                                                <p className="text-secondary text-[11px]">Head of Admissions Strategy</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Consultation Scheduling */}
+                    <section className="py-stack-lg px-gutter max-w-6xl mx-auto" id="consultation">
+                        <div className="flex flex-col lg:flex-row gap-16">
+                            <div className="lg:w-1/2">
+                                <h2 className="font-section-heading text-section-heading text-plum mb-6">Schedule a Strategy Session</h2>
+                                <p className="text-body-lg text-secondary mb-8 leading-relaxed">Initial consultations are strictly by appointment. Select a slot below to begin your evaluation process with Anirudh Pappu.</p>
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-4 p-4 border border-border">
+                                        <span className="material-symbols-outlined text-plum">calendar_month</span>
+                                        <div>
+                                            <p className="font-card-title text-plum text-sm">Weekday PM Availability</p>
+                                            <p className="text-body-sm text-secondary">Focused deep-dives (5:00 PM - 8:00 PM)</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-4 p-4 border border-border">
+                                        <span className="material-symbols-outlined text-plum">weekend</span>
+                                        <div>
+                                            <p className="font-card-title text-plum text-sm">Weekend AM Availability</p>
+                                            <p className="text-body-sm text-secondary">Full diagnostic reviews (9:00 AM - 12:00 PM)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="lg:w-1/2 bg-white border border-border p-4 sm:p-6">
+                                <div id="admissions-cal-embed" className="min-h-[680px] rounded-lg overflow-hidden"></div>
+                                <button onClick={() => window.open(ADMISSIONS_CHECKOUT_URL, '_blank')} className="w-full bg-plum text-white py-4 font-button-text hover:opacity-90 transition-opacity mt-4">Pay $350 admissions package</button>
+                                <p className="text-[11px] text-center text-secondary mt-4">Book the admissions consult, then complete the $350 Stripe package payment.</p>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            );
+        };
+
+        const AboutPage = () => {
+            const navigate = useNavigate();
+            return (
+                <main className="w-full">
+                    <div className="flex flex-col lg:flex-row w-full max-w-[1440px] mx-auto">
+                        <aside className="lg:w-[430px] lg:sticky lg:top-[72px] lg:h-[calc(100vh-72px)] bg-surface-bright flex flex-col justify-between p-gutter border-r border-border">
+                            <div>
+                                <span className="font-label-caps text-label-caps text-plum uppercase tracking-widest block mb-4">The Visionary</span>
+                                <h1 className="font-section-heading text-section-heading text-plum mb-6">Redefining Academic Mentorship.</h1>
+                                <p className="font-body-lg text-body-lg text-secondary mb-8">
+                                    Excellence should never come at the cost of your well-being. Apex Minds was founded to provide high-achievers with the surgical precision of elite tutoring and the emotional intelligence of a personal mentor.
+                                </p>
+                            </div>
+                            <div className="relative aspect-[3/4] overflow-hidden rounded-lg mb-8">
+                                <img alt="Professional portrait of Anirudh Pappu" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCscpn1z5_LriV3VoEhzbhsvoAVGM7gg8qtwfBH3rk7BHMDXRdUA6lpHSNdTi0iiOQNVamvYY69ojV5IOHfkZd_4z1uaHZWMf3K4LZ61AR-Np7mxNBFcTsfVM9OItuU_cOFQMYZpx_1xfA5cH24sTyLe32BAy4oFzQ4Dz5VWLfJZz3_8jnF20vQHT7YpR5jt06AYL1kCB6M3VgZRD0aHTY0fmabJyyXYr7ZG9kULOJfql_W-n9aN1DVljHC_EXY14G_Euu32ppkzw" />
+                            </div>
+                            <div className="border-t border-border pt-6">
+                                <p className="font-label-caps text-label-caps text-plum mb-2">Founder & Lead Mentor</p>
+                                <p className="font-card-title text-card-title text-plum">Anirudh Pappu</p>
+                            </div>
+                        </aside>
+                        <section className="flex-1 bg-white p-gutter lg:pl-16">
+                            <div className="max-w-[560px] mb-stack-lg">
+                                <h2 className="font-label-caps text-label-caps text-secondary mb-4 uppercase tracking-widest">Our Origin</h2>
+                                <h3 className="font-section-heading text-section-heading text-plum mb-6">The Stress-Free Excellence Model.</h3>
+                                <div className="space-y-6 font-body-lg text-body-lg text-secondary leading-relaxed">
+                                    <p>
+                                        Ten years ago, I noticed a disturbing trend in high-stakes education: the brighter the student, the higher the anxiety. Traditional tutoring focused solely on the mechanics of the test, ignoring the psychological weight of the goal.
+                                    </p>
+                                    <p>
+                                        I built Apex Minds to bridge that gap. We don't just teach the material; we teach the mindset. Our methodology is built on three pillars: <span className="text-plum font-semibold">Strategic Precision</span>, <span className="text-plum font-semibold">Adaptive Learning</span>, and <span className="text-plum font-semibold">Sustainable Ambition</span>.
+                                    </p>
+                                    <p>
+                                        Every student I have taught has seen a guaranteed point increase. All parents report 100% satisfaction and 5-star experiences. Today, we are a collective of academic specialists who treat every student's journey as a boutique project.
+                                    </p>
+                                </div>
+                                <div className="mt-12 grid grid-cols-2 gap-8 border-y border-border py-8">
+                                    <div>
+                                        <div className="font-price-display text-price-display text-plum">100%</div>
+                                        <p className="font-label-caps text-label-caps text-secondary">Parent Satisfaction</p>
+                                    </div>
+                                    <div>
+                                        <div className="font-price-display text-price-display text-plum">150+</div>
+                                        <p className="font-label-caps text-label-caps text-secondary">Average Point Increase</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="max-w-[700px] mt-stack-lg">
+                                <h2 className="font-label-caps text-label-caps text-secondary mb-4 uppercase tracking-widest">Student Success Stories</h2>
+                                <h3 className="font-section-heading text-section-heading text-plum mb-8">Refining the Standard of Success.</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="bg-surface p-6 border border-border rounded-lg flex flex-col justify-between hover:border-plum transition-colors group">
+                                        <div>
+                                            <div className="flex text-success mb-4">
+                                                <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
+                                                <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
+                                                <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
+                                                <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
+                                                <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
+                                            </div>
+                                            <p className="font-body-lg text-body-lg italic text-plum mb-6">"The most professional prep I have ever experienced. His guidance alone helped me turn around my strategy when I was under pressure."</p>
+                                        </div>
+                                        <div className="font-label-caps text-label-caps text-secondary group-hover:text-plum transition-colors">— Sarah J.</div>
+                                    </div>
+                                    <div className="bg-surface p-6 border border-border rounded-lg flex flex-col justify-between hover:border-plum transition-colors group">
+                                        <div>
+                                            <div className="flex text-success mb-4">
+                                                <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
+                                                <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
+                                                <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
+                                                <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
+                                                <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
+                                            </div>
+                                            <p className="font-body-lg text-body-lg italic text-plum mb-6">"His guidance alone helped me turn around my strategy. I was struggling with complex concepts, and his approach made everything clear."</p>
+                                        </div>
+                                        <div className="font-label-caps text-label-caps text-secondary group-hover:text-plum transition-colors">— Marcus T.</div>
+                                    </div>
+                                    <div className="bg-violet-panel p-6 border border-border rounded-lg flex flex-col justify-between hover:border-plum transition-colors group col-span-1 md:col-span-2">
+                                        <div className="flex items-start justify-between">
+                                            <div className="max-w-[400px]">
+                                                <div className="flex text-success mb-4">
+                                                    <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
+                                                    <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
+                                                    <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
+                                                    <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
+                                                    <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
+                                                </div>
+                                                <p className="font-card-title text-card-title text-plum mb-4">"A complete strategic shift."</p>
+                                                <p className="font-body-lg text-body-lg text-secondary mb-6">"His guidance alone helped me turn around my strategy. Working with Anirudh wasn't just about editing; it was an exercise in self-discovery. Apex Minds helped me find my voice."</p>
+                                                <div className="font-label-caps text-label-caps text-plum">— Elena R.</div>
+                                            </div>
+                                            <span className="material-symbols-outlined text-plum text-4xl opacity-10">format_quote</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="mt-stack-lg bg-violet-panel border border-border p-8 rounded-lg">
+                                <h4 className="font-card-title text-card-title text-plum mb-2">Ready to start your journey?</h4>
+                                <p className="font-body-lg text-body-lg text-secondary mb-6">Join the cohort of students who have mastered their academic goals with a guaranteed point increase.</p>
+                                <div className="flex flex-col sm:flex-row gap-4">
+                                    <button onClick={() => navigate('/book')} className="bg-plum text-on-primary font-button-text text-button-text px-8 py-4 rounded hover:opacity-90 transition-opacity">Schedule a Consultation</button>
+                                    <button onClick={() => navigate('/match')} className="border border-plum text-plum font-button-text text-button-text px-8 py-4 rounded hover:bg-plum hover:text-white transition-all">View All Success Stories</button>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </main>
+            );
+        };
+
+        const ConfirmationPage = () => {
+            const navigate = useNavigate();
+            return (
+                <main className="min-h-[calc(100vh-200px)] flex items-center justify-center px-gutter py-24">
+                    <div className="max-w-md w-full bg-white border border-border rounded-2xl p-10 text-center shadow-sm">
+                        <div className="w-16 h-16 bg-success/10 text-success rounded-full flex items-center justify-center mx-auto mb-6">
+                            <span className="material-symbols-outlined text-4xl" style={{fontVariationSettings: "'FILL' 1"}}>check_circle</span>
+                        </div>
+                        <h1 className="font-section-heading text-plum mb-4">Payment received.</h1>
+                        <p className="font-body-lg text-secondary mb-8">
+                            Your session with <span className="font-bold text-plum">STEM Tutor</span> on <span className="font-bold text-plum">Monday at 5:00 PM</span> is confirmed. 
+                            Check your email for the Microsoft Teams link.
+                        </p>
+                        <button onClick={() => navigate('/')} className="w-full bg-plum text-white py-4 rounded-xl font-button-text hover:opacity-90 transition-all">
+                            Back to Home
+                        </button>
+                    </div>
+                </main>
+            );
+        };
+
+        const ClientLoginPage = () => {
+            const [user, setUser] = useState(null);
+            const [authError, setAuthError] = useState('');
+            const [authNotice, setAuthNotice] = useState('');
+            const [email, setEmail] = useState('');
+
+            useEffect(() => {
+                if (!supabaseClient) return;
+                supabaseClient.auth.getSession().then(({ data }) => {
+                    setUser(data && data.session ? data.session.user : null);
+                });
+                const { data: listener } = supabaseClient.auth.onAuthStateChange((_event, session) => {
+                    setUser(session ? session.user : null);
+                });
+                return () => {
+                    if (listener && listener.subscription) listener.subscription.unsubscribe();
+                };
+            }, []);
+
+            const signIn = async (provider) => {
+                setAuthError('');
+                setAuthNotice('');
+                if (!supabaseClient) {
+                    setAuthError('Client login is configured in the app, but Supabase public settings are not available in this build yet.');
+                    return;
+                }
+                const { error } = await supabaseClient.auth.signInWithOAuth({
+                    provider,
+                    options: { redirectTo: `${window.location.origin}/login` }
+                });
+                if (error) {
+                    const message = error.message || '';
+                    if (message.toLowerCase().includes('unsupported provider') || message.toLowerCase().includes('provider is not enabled')) {
+                        setAuthError(`${provider.charAt(0).toUpperCase() + provider.slice(1)} login is wired correctly, but it still needs to be enabled in Supabase Auth settings.`);
+                    } else {
+                        setAuthError(message);
+                    }
+                }
+            };
+
+            const signInWithEmail = async () => {
+                setAuthError('');
+                setAuthNotice('');
+                if (!email) {
+                    setAuthError('Enter a parent email first.');
+                    return;
+                }
+                if (!supabaseClient) {
+                    setAuthError('Client login is configured in the app, but Supabase public settings are not available in this build yet.');
+                    return;
+                }
+                const { error } = await supabaseClient.auth.signInWithOtp({
+                    email: email,
+                    options: { emailRedirectTo: `${window.location.origin}/login` }
+                });
+                if (error) {
+                    setAuthError(error.message);
+                } else {
+                    setAuthNotice('Check your email for the secure login link.');
+                }
+            };
+
+            const signOut = async () => {
+                if (supabaseClient) await supabaseClient.auth.signOut();
+                setUser(null);
+            };
+
+            const oauthButtons = [
+                { provider: 'google', label: 'Continue with Google', logo: 'https://cdn.simpleicons.org/google' },
+                { provider: 'apple', label: 'Continue with Apple', logo: 'https://cdn.simpleicons.org/apple' },
+                { provider: 'facebook', label: 'Continue with Facebook', logo: 'https://cdn.simpleicons.org/facebook/1877F2' }
+            ];
+
+            return (
+                <main className="min-h-[calc(100vh-200px)] bg-surface-container-low px-gutter py-16">
+                    <div className="max-w-[1180px] mx-auto grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-8">
+                        <section className="bg-white border border-border rounded-2xl p-8 shadow-sm">
+                            <span className="font-label-caps text-label-caps text-plum uppercase tracking-widest">Client Portal</span>
+                            <h1 className="font-section-heading text-[42px] leading-tight text-plum mt-4 mb-4">Track sessions, payments, and booking history.</h1>
+                            <p className="font-body-lg text-secondary mb-8">Parents will sign in with Google, Apple, or Facebook to see monthly session credits, completed sessions, upcoming Teams meetings, and payment history.</p>
+                            {user && (
+                                <div className="mb-6 border border-primary-fixed bg-violet-panel rounded-lg p-4">
+                                    <p className="font-button-text text-plum">Signed in</p>
+                                    <p className="font-body-sm text-muted-text truncate">{user.email}</p>
+                                </div>
+                            )}
+                            <div className="space-y-3">
+                                {oauthButtons.map(item => (
+                                    <button
+                                        key={item.provider}
+                                        onClick={() => signIn(item.provider)}
+                                        className="w-full flex items-center justify-center gap-3 border border-border rounded-lg py-4 font-button-text text-plum hover:border-plum hover:bg-violet-panel transition-all"
+                                    >
+                                        <img src={item.logo} alt="" className="w-5 h-5 object-contain" />
+                                        {item.label}
+                                    </button>
+                                ))}
+                                <div className="pt-4 border-t border-border">
+                                    <label className="font-label-caps text-label-caps text-plum">Email login fallback</label>
+                                    <div className="mt-3 flex flex-col sm:flex-row gap-3">
+                                        <input value={email} onChange={(e) => setEmail(e.target.value)} className="flex-1 border border-border rounded-lg p-3 font-body-lg focus:ring-2 focus:ring-plum/20 focus:border-plum outline-none transition-all" placeholder="parent@email.com" type="email" />
+                                        <button onClick={signInWithEmail} className="bg-black text-white px-5 py-3 rounded-lg font-button-text hover:bg-plum transition-colors">Send link</button>
+                                    </div>
+                                </div>
+                                {user && (
+                                    <button onClick={signOut} className="w-full bg-black text-white rounded-lg py-4 font-button-text hover:bg-plum transition-colors">
+                                        Sign out
+                                    </button>
+                                )}
+                            </div>
+                            {authError && <p className="mt-6 text-body-sm text-error">{authError}</p>}
+                            {authNotice && <p className="mt-6 text-body-sm text-success">{authNotice}</p>}
+                            <p className="mt-6 text-body-sm text-muted-text">OAuth is wired through Supabase. Social buttons require each provider to be enabled in Supabase; email login can work as the fallback portal entry.</p>
+                        </section>
+
+                        <section className="bg-white border border-border rounded-2xl p-8 shadow-sm">
+                            <div className="flex items-start justify-between gap-4 mb-8">
+                                <div>
+                                    <span className="font-label-caps text-label-caps text-muted-text">Dashboard Preview</span>
+                                    <h2 className="font-section-heading text-section-heading text-plum mt-2">June session ledger</h2>
+                                </div>
+                                <span className="bg-success/10 text-success px-3 py-1 rounded-full font-button-text text-sm">8 left</span>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8">
+                                <div className="border border-border rounded-lg p-4">
+                                    <p className="text-body-sm text-muted-text">Purchased</p>
+                                    <p className="font-section-heading text-plum">8</p>
+                                </div>
+                                <div className="border border-border rounded-lg p-4">
+                                    <p className="text-body-sm text-muted-text">Used</p>
+                                    <p className="font-section-heading text-plum">0</p>
+                                </div>
+                                <div className="border border-border rounded-lg p-4">
+                                    <p className="text-body-sm text-muted-text">Remaining</p>
+                                    <p className="font-section-heading text-plum">8</p>
+                                </div>
+                            </div>
+                            <div className="space-y-3">
+                                {[
+                                    ['Payment confirmed', 'Standard 8-session package', '+8 sessions'],
+                                    ['Upcoming booking', 'Microsoft Teams link pending', 'not used'],
+                                    ['Teams attendance sync', 'Connect Microsoft Graph to auto-mark completed calls', 'setup needed'],
+                                    ['Cancellation policy', '12+ hour changes reviewed for credit return', 'policy']
+                                ].map(row => (
+                                    <div key={row[0]} className="flex items-center justify-between gap-4 border border-border rounded-lg p-4">
+                                        <div>
+                                            <p className="font-button-text text-plum">{row[0]}</p>
+                                            <p className="text-body-sm text-muted-text">{row[1]}</p>
+                                        </div>
+                                        <span className="text-body-sm text-success font-bold">{row[2]}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    </div>
+                </main>
+            );
+        };
+
+        const TutorProfilePage = () => {
+            const navigate = useNavigate();
+            const params = useParams();
+            const { setSelectedBooking } = useContext(AppContext);
+            const tutor = TUTOR_PROFILES.find(item => item.id === params.tutorId) || TUTOR_PROFILES[0];
+            const [monthlySessions, setMonthlySessions] = useState(tutor.id === 'testprep' ? 12 : 8);
+            const [weeklyPlan, setWeeklyPlan] = useState(tutor.id === 'testprep' ? 3 : 2);
+            const [selectedSlots, setSelectedSlots] = useState([]);
+            const tutorSlots = TUTOR_CALENDAR_SLOTS.filter(slot => slot.tutorId === tutor.id);
+            const calElementId = `cal-embed-${tutor.id}`;
+
+            useEffect(() => {
+                if (!tutor.calLink) return;
+                loadCalEmbed(() => {
+                    if (window.Cal) {
+                        window.Cal('inline', {
+                            elementOrSelector: `#${calElementId}`,
+                            calLink: tutor.calLink,
+                            config: { layout: 'month_view' }
+                        });
+                        window.Cal('ui', { hideEventTypeDetails: false, layout: 'month_view' });
+                    }
+                });
+            }, [tutor.id]);
+
+            const toggleSlot = (slot) => {
+                if (slot.booked) return;
+                setSelectedSlots(prev => (
+                    prev.includes(slot.id)
+                        ? prev.filter(id => id !== slot.id)
+                        : prev.length < monthlySessions
+                            ? [...prev, slot.id]
+                            : prev
+                ));
+            };
+
+            const continueToPayment = () => {
+                const selectedSlotData = tutorSlots.filter(slot => selectedSlots.includes(slot.id));
+                setSelectedBooking({
+                    source: 'tutor-profile',
+                    tutorId: tutor.id,
+                    tutorName: tutor.title,
+                    tier: tutor.tier,
+                    monthlySessions: monthlySessions,
+                    weeklyPlan: weeklyPlan,
+                    slots: selectedSlotData
+                });
+                navigate('/packages');
+            };
+
+            return (
+                <main className="bg-surface-container-low min-h-screen">
+                    <section className="bg-white border-b border-border py-14">
+                        <div className="max-w-7xl mx-auto px-gutter grid grid-cols-1 lg:grid-cols-[0.75fr_1.25fr] gap-10 items-start">
+                            <div className="bg-white border border-border rounded-xl p-6">
+                                <img className="w-full h-72 object-cover rounded-lg mb-6" src={tutor.img} alt={tutor.title} />
+                                <span className="font-label-caps text-label-caps text-plum">{tutor.type}</span>
+                                <h1 className="font-price-display text-[44px] text-plum mt-3 mb-4">{tutor.title}</h1>
+                                <p className="font-body-lg text-secondary mb-6">{tutor.desc}</p>
+                                <div className="flex flex-wrap gap-2">
+                                    {tutor.subjects.map(subject => (
+                                        <span key={subject} className="px-3 py-2 rounded-lg bg-violet-panel border border-primary-fixed text-plum font-body-sm text-body-sm">{subject}</span>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="space-y-6">
+                                <section className="bg-white border border-border rounded-xl p-8">
+                                    <span className="font-label-caps text-label-caps text-muted-text">Tutor dashboard preview</span>
+                                    <h2 className="font-section-heading text-section-heading text-plum mt-2 mb-4">What this tutor manages</h2>
+                                    <p className="font-body-lg text-secondary mb-6">{tutor.style}</p>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        {tutor.dashboard.map(item => (
+                                            <div key={item} className="flex items-center gap-3 border border-border rounded-lg p-4">
+                                                <span className="material-symbols-outlined text-success">check_circle</span>
+                                                <span className="font-body-sm text-body-sm text-plum">{item}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </section>
+
+                                <section className="bg-white border border-border rounded-xl p-8">
+                                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+                                        <div>
+                                            <span className="font-label-caps text-label-caps text-plum">Full monthly calendar</span>
+                                            <h2 className="font-section-heading text-section-heading text-plum mt-2">Book recurring sessions</h2>
+                                        </div>
+                                        <span className="text-body-sm text-muted-text">{selectedSlots.length} of {monthlySessions} selected</span>
+                                    </div>
+                                    {tutor.calLink ? (
+                                        <div>
+                                            <div id={calElementId} className="min-h-[680px] border border-border rounded-lg overflow-hidden"></div>
+                                            <button onClick={continueToPayment} className="w-full mt-6 bg-plum text-white py-4 rounded-lg font-button-text hover:opacity-90 transition-all">
+                                                Continue to payment after booking
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                    <div className="grid grid-cols-3 gap-3 mb-4">
+                                        {[4, 8, 12].map(count => (
+                                            <button
+                                                key={count}
+                                                onClick={() => { setMonthlySessions(count); setSelectedSlots([]); setWeeklyPlan(count === 12 ? 3 : count === 8 ? 2 : 1); }}
+                                                className={`border rounded-lg p-3 text-left ${monthlySessions === count ? 'border-plum bg-violet-panel text-plum' : 'border-border text-secondary hover:border-plum'}`}
+                                            >
+                                                <span className="block font-section-heading text-[22px]">{count}</span>
+                                                <span className="font-body-sm text-body-sm">per month</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <div className="flex flex-wrap gap-2 mb-6">
+                                        {[1, 2, 3].map(count => (
+                                            <button
+                                                key={count}
+                                                onClick={() => setWeeklyPlan(count)}
+                                                className={`px-4 py-2 border rounded-lg font-button-text text-sm ${weeklyPlan === count ? 'bg-plum text-white border-plum' : 'bg-white border-border text-plum hover:border-plum'}`}
+                                            >
+                                                {count}x/week
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                                        {tutorSlots.map(slot => {
+                                            const active = selectedSlots.includes(slot.id);
+                                            return (
+                                                <button
+                                                    key={slot.id}
+                                                    disabled={slot.booked}
+                                                    onClick={() => toggleSlot(slot)}
+                                                    className={`text-left border rounded-lg p-4 transition-all ${slot.booked ? 'border-border bg-surface-container text-muted-text line-through opacity-60 cursor-not-allowed' : active ? 'border-plum bg-plum text-white' : 'border-border hover:border-plum hover:bg-violet-panel'}`}
+                                                >
+                                                    <span className="block font-label-caps text-label-caps mb-2">{slot.day}</span>
+                                                    <span className="block font-button-text">{slot.date}</span>
+                                                    <span className={`block text-body-sm mt-1 ${active ? 'text-white/80' : 'text-muted-text'}`}>{slot.time}</span>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                    <button onClick={continueToPayment} className="w-full mt-6 bg-plum text-white py-4 rounded-lg font-button-text hover:opacity-90 transition-all">
+                                        Continue to payment
+                                    </button>
+                                        </div>
+                                    )}
+                                </section>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            );
+        };
+
+        const BookingPage = () => {
+            const navigate = useNavigate();
+
+            return (
+                <main className="max-w-[1440px] mx-auto min-h-screen">
+                    <div className="px-8 py-6">
+                        <nav className="flex items-center gap-2 font-body-sm text-muted-text">
+                            <Link to="/tutors" className="hover:text-primary">Tutors</Link>
+                            <span className="material-symbols-outlined text-sm">chevron_right</span>
+                            <span className="text-on-surface font-medium">STEM Tutor</span>
+                        </nav>
+                    </div>
+                    
+                    <div className="flex flex-col lg:flex-row min-h-[calc(100vh-140px)]">
+                        {/* Left Column: Content (FBFBFC) */}
+                        <div className="flex-1 bg-surface-bright px-8 lg:px-12 py-10">
+                            <div className="max-w-xl mx-auto lg:mr-0 lg:ml-auto">
+                                <div className="mb-10">
+                                    <span className="font-label-caps text-label-caps text-muted-text uppercase mb-2 block">Placeholder profile</span>
+                                    <h1 className="font-section-heading text-[48px] font-bold text-plum mb-6 leading-tight">STEM Tutor</h1>
+                                    <div className="flex items-center gap-2 mb-8 p-4 bg-violet-panel border border-outline-variant rounded-lg">
+                                        <span className="material-symbols-outlined text-plum">psychology</span>
+                                        <p className="font-body-lg text-plum leading-relaxed">
+                                            Structured support for students who need concept repair, steady practice, and a clear weekly rhythm.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <section className="mb-12">
+                                    <h3 className="font-card-title text-card-title text-plum mb-4">Expertise</h3>
+                                    <ul className="space-y-3">
+                                        <li className="flex items-center gap-3">
+                                            <span className="material-symbols-outlined text-plum text-[20px]">check_circle</span>
+                                            <span className="font-body-lg">Algebra & Geometry</span>
+                                        </li>
+                                        <li className="flex items-center gap-3">
+                                            <span className="material-symbols-outlined text-plum text-[20px]">check_circle</span>
+                                            <span className="font-body-lg">Biology & Chemistry</span>
+                                        </li>
+                                        <li className="flex items-center gap-3">
+                                            <span className="material-symbols-outlined text-plum text-[20px]">check_circle</span>
+                                            <span className="font-body-lg">AP STEM Support</span>
+                                        </li>
+                                    </ul>
+                                </section>
+
+                                <section className="mb-12">
+                                    <h3 className="font-card-title text-card-title text-plum mb-4">Teaching Style</h3>
+                                    <div className="flex flex-wrap gap-2">
+                                        <span className="px-4 py-2 bg-white border border-border rounded-full font-body-sm text-ink">Structured</span>
+                                        <span className="px-4 py-2 bg-white border border-border rounded-full font-body-sm text-ink">Practice-led</span>
+                                        <span className="px-4 py-2 bg-white border border-border rounded-full font-body-sm text-ink">Confidence-building</span>
+                                        <span className="px-4 py-2 bg-white border border-border rounded-full font-body-sm text-ink">Weekly accountability</span>
+                                    </div>
+                                </section>
+
+                                <section className="mb-12">
+                                    <h3 className="font-card-title text-card-title text-plum mb-4">Best For</h3>
+                                    <p className="font-body-lg text-secondary leading-relaxed">
+                                        Students who need a calm reset, homework support, and test preparation across various STEM courses. This tutor excels at identifying knowledge gaps and filling them with high-repetition practice.
+                                    </p>
+                                </section>
+
+                                <section className="flex items-center gap-3 p-6 border border-border rounded-lg bg-white">
+                                    <span className="material-symbols-outlined text-plum">videocam</span>
+                                    <div>
+                                        <p className="font-body-sm text-muted-text">Online sessions</p>
+                                        <p className="font-body-lg font-medium text-ink">Microsoft Teams</p>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+
+                        {/* Right Column: Sticky Action Panel (White) */}
+                        <div className="lg:w-[640px] bg-white border-l border-border px-8 lg:px-12 py-10 relative">
+                            <div className="max-w-[pane-right-max] mx-auto lg:ml-0 sticky top-28">
+                                <h2 className="font-section-heading text-section-heading text-plum mb-6">Real-Time Availability</h2>
+                                <p className="font-body-sm text-muted-text mb-6">Select a slot to hold your session. You will choose your package in the next step to confirm.</p>
+                                
+                                <div className="border border-border rounded-xl overflow-hidden mb-8">
+                                    <div className="bg-surface-container-low px-6 py-4 border-b border-border flex justify-between items-center">
+                                        <span className="font-label-caps text-label-caps text-ink uppercase">Select a Session Time</span>
+                                        <span className="flex items-center gap-1 text-success font-body-sm font-semibold">
+                                            <span className="w-2 h-2 rounded-full bg-success"></span>
+                                            Live slots
+                                        </span>
+                                    </div>
+                                    <div className="p-6">
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                            <div onClick={() => navigate('/packages')} className="p-3 border border-border rounded bg-white text-center hover:border-plum hover:bg-violet-panel cursor-pointer transition-colors group">
+                                                <div className="font-label-caps text-[10px] text-muted-text mb-1 group-hover:text-plum">MON</div>
+                                                <div className="font-body-sm font-bold text-ink group-hover:text-plum">5:00 PM</div>
+                                            </div>
+                                            <div onClick={() => navigate('/packages')} className="p-3 border border-border rounded bg-white text-center hover:border-plum hover:bg-violet-panel cursor-pointer transition-colors group">
+                                                <div className="font-label-caps text-[10px] text-muted-text mb-1 group-hover:text-plum">TUE</div>
+                                                <div className="font-body-sm font-bold text-ink group-hover:text-plum">6:30 PM</div>
+                                            </div>
+                                            <div onClick={() => navigate('/packages')} className="p-3 border border-border rounded bg-white text-center hover:border-plum hover:bg-violet-panel cursor-pointer transition-colors group">
+                                                <div className="font-label-caps text-[10px] text-muted-text mb-1 group-hover:text-plum">THU</div>
+                                                <div className="font-body-sm font-bold text-ink group-hover:text-plum">4:30 PM</div>
+                                            </div>
+                                            <div onClick={() => navigate('/packages')} className="p-3 border border-border rounded bg-white text-center hover:border-plum hover:bg-violet-panel cursor-pointer transition-colors group">
+                                                <div className="font-label-caps text-[10px] text-muted-text mb-1 group-hover:text-plum">SAT</div>
+                                                <div className="font-body-sm font-bold text-ink group-hover:text-plum">10:00 AM</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-surface-container-low p-6 rounded-lg mb-4 border border-border">
+                                    <div className="flex items-start gap-4">
+                                        <span className="material-symbols-outlined text-secondary">info</span>
+                                        <p className="font-body-sm text-on-secondary-container leading-relaxed">
+                                            Standard Tutoring from <strong className="text-ink">$148/mo</strong>. Existing subscribers can book using remaining sessions. New clients choose a package before final confirmation.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="bg-violet-panel p-6 rounded-lg border border-outline-variant">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <h4 className="font-card-title text-body-lg font-bold text-plum">Advanced Placement</h4>
+                                        <span className="px-2 py-0.5 bg-primary-fixed text-plum text-[10px] font-bold rounded uppercase">AP Track</span>
+                                    </div>
+                                    <p className="font-body-sm text-on-primary-fixed-variant">
+                                        AP support uses qualified subject specialists. Please select the Advanced Placement track during checkout for AP course support.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            );
+        };
+
+        // --- Router Setup ---
+        const App = () => {
+            const [showLoader, setShowLoader] = useState(true);
+
+            useEffect(() => {
+                const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                if (reducedMotion) {
+                    setShowLoader(false);
+                    return;
+                }
+                const timer = window.setTimeout(() => setShowLoader(false), 2450);
+                return () => window.clearTimeout(timer);
+            }, []);
+
+            return (
+                <AppProvider>
+                <BrowserRouter>
+                    <div className="flex flex-col min-h-screen">
+                        {showLoader && <ApexLoader />}
+                        <MotionDirector />
+                        <Header />
+                        <PricingOverlay />
+                        <Routes>
+                            <Route path="/" element={<HomePage />} />
+                            <Route path="/tutors" element={<TutorsPage />} />
+                            <Route path="/tutors/:tutorId" element={<TutorProfilePage />} />
+                            <Route path="/match" element={<MatchPage />} />
+                            <Route path="/packages" element={<PackagesPage />} />
+                            <Route path="/admissions" element={<AdmissionsPage />} />
+                            <Route path="/login" element={<ClientLoginPage />} />
+                            <Route path="/about" element={<AboutPage />} />
+                            <Route path="/book" element={<BookingPage />} />
+                            <Route path="/confirm" element={<ConfirmationPage />} />
+                        </Routes>
+                        <Footer />
+                    </div>
+                </BrowserRouter>
+                </AppProvider>
+            );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

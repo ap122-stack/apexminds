@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AP Tutoring</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-=======
 <!DOCTYPE html>
 <html class="light" lang="en">
 <head>
@@ -27,10 +14,6 @@
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script type="module">
-        import { animate, stagger, inView } from "https://cdn.jsdelivr.net/npm/motion@latest/+esm";
-        window.MotionOne = { animate, stagger, inView };
-    </script>
     <script>
         window.MotionOne = window.MotionOne || {
             animate: function(targets, keyframes, options) {
@@ -280,7 +263,8 @@
             background:
                 repeating-linear-gradient(90deg, transparent 0 118px, rgba(33,28,48,0.06) 119px, transparent 120px),
                 linear-gradient(180deg, transparent 0%, rgba(33,28,48,0.04) 100%);
-            mask-image: linear-gradient(90deg, black, transparent 92%);
+            -webkit-mask-image: linear-gradient(90deg, black, transparent 92%);
+                    mask-image: linear-gradient(90deg, black, transparent 92%);
             animation: apex-grid-slide 14s linear infinite;
         }
         .premium-hero::before {
@@ -572,6 +556,7 @@
           }
         }
     </script>
+  <script type="module" crossorigin src="/assets/index-CWkMrIu0.js"></script>
 </head>
 <body class="bg-background text-on-surface selection:bg-primary-fixed">
     <div id="root"></div>
@@ -582,8 +567,8 @@
         const { BrowserRouter, Routes, Route, Link, useNavigate, useLocation, useParams } = ReactRouterDOM;
         const ADMISSIONS_CHECKOUT_URL = 'https://buy.stripe.com/dRm14n0Z25Xc8gkbIh0sU0a'; // Admissions package updated
         const ADMISSIONS_CAL_LINK = 'anirudh-pappu/adconsult';
-        const SUPABASE_URL = '%VITE_SUPABASE_URL%';
-        const SUPABASE_ANON_KEY = '%VITE_SUPABASE_PUBLISHABLE_KEY%';
+        const SUPABASE_URL = 'https://sowitrowxmrztheqcajc.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvd2l0cm93eG1yenRoZXFjYWpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NzYxNDYsImV4cCI6MjA5NTU1MjE0Nn0.HtwfQvYsRyv1sJOL0ikolK1i3xT_LTV7kHTooVLiNcA';
         const supabaseClient = window.supabase && SUPABASE_URL && !SUPABASE_URL.includes('VITE_')
             ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
             : null;
@@ -2605,5 +2590,4 @@
         root.render(<App />);
     </script>
 </body>
->>>>>>> feature/deploy-legacy-dist-and-update-stripe
 </html>

@@ -14,9 +14,9 @@ const tiers = {
 };
 
 const packages = {
-  standard: { 4: { sku: 'standard_4', price: 148, rate: 37, savings: 32 }, 8: { sku: 'standard_8', price: 280, rate: 35, savings: 80 }, 12: { sku: 'standard_12', price: 396, rate: 33, savings: 144 } },
-  test_prep: { 4: { sku: 'test_prep_4', price: 292, rate: 73, savings: 28 }, 8: { sku: 'test_prep_8', price: 560, rate: 70, savings: 80 }, 12: { sku: 'test_prep_12', price: 816, rate: 68, savings: 144 } },
-  ap_direct: { 4: { sku: 'ap_direct_4', price: 188, rate: 47, savings: 32 }, 8: { sku: 'ap_direct_8', price: 352, rate: 44, savings: 88 }, 12: { sku: 'ap_direct_12', price: 504, rate: 42, savings: 156 } },
+  standard: { 4: { sku: 'standard_4', price: 148, rate: 37, savings: 32, link: 'https://buy.stripe.com/7sYcN537agBQaos6nX0sU00' }, 8: { sku: 'standard_8', price: 280, rate: 35, savings: 80, link: 'https://buy.stripe.com/3cIbJ10Z21GWfIM3bL0sU01' }, 12: { sku: 'standard_12', price: 396, rate: 33, savings: 144, link: 'https://buy.stripe.com/3cI8wP4beclAaos5jT0sU02' } },
+  test_prep: { 4: { sku: 'test_prep_4', price: 292, rate: 73, savings: 28, link: 'https://buy.stripe.com/5kQ8wP4be99o2W08w50sU0c' }, 8: { sku: 'test_prep_8', price: 560, rate: 70, savings: 80, link: 'https://buy.stripe.com/cNi3cvbDG2L0bswdQp0sU0b' }, 12: { sku: 'test_prep_12', price: 816, rate: 68, savings: 144, link: 'https://buy.stripe.com/14AfZhazCfxMfIM9A90sU0d' } },
+  ap_direct: { 4: { sku: 'ap_direct_4', price: 188, rate: 47, savings: 32, link: 'https://buy.stripe.com/dRmbJ17nqclA5488w50sU06' }, 8: { sku: 'ap_direct_8', price: 352, rate: 44, savings: 88, link: 'https://buy.stripe.com/8x214nePS5Xcaos7s10sU07' }, 12: { sku: 'ap_direct_12', price: 504, rate: 42, savings: 156, link: 'https://buy.stripe.com/eVq7sLePS2L0gMQdQp0sU08' } },
 };
 
 const bookingLinks = {

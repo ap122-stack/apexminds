@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AP Tutoring</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-=======
 <!DOCTYPE html>
 <html class="light" lang="en">
 <head>
@@ -787,8 +774,8 @@
             
             const navLinks = [
                 { name: 'Home', path: '/' },
+                { name: 'Tutors', path: '/tutors' },
                 { name: 'Match', path: '/match' },
-                { name: 'Browse Tutors', path: '/tutors' },
                 { name: 'Pricing', path: '/packages' },
                 { name: 'Admissions', path: '/admissions' },
                 { name: 'About Us', path: '/about' },
@@ -967,55 +954,6 @@
                                     <span className="material-symbols-outlined text-4xl text-plum mb-4">assignment_turned_in</span>
                                     <h3 className="font-card-title text-card-title text-plum mb-2">Test Prep</h3>
                                     <p className="text-secondary text-body-sm">Strategic SAT/ACT patterns and pacing for maximum score improvement.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    <section className="py-16 bg-surface-container-low border-y border-border">
-                        <div className="max-w-7xl mx-auto px-gutter">
-                            <div className="text-center mb-12">
-                                <h2 className="font-section-heading text-section-heading text-plum mb-4">Trusted by Students & Parents</h2>
-                                <p className="font-body-lg text-body-lg text-secondary max-w-2xl mx-auto">Hear from families who've achieved their academic goals with our expert tutors.</p>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                <div className="bg-white border border-border rounded-xl p-6 motion-card reveal-up">
-                                    <div className="flex gap-1 mb-4">
-                                        {[...Array(5)].map((_, i) => <span key={i} className="text-yellow-400 text-lg">★</span>)}
-                                    </div>
-                                    <p className="font-body-lg text-body-lg text-secondary mb-4 italic">"My daughter went from a 28 ACT to a 34 in just 3 months. The personalized approach truly made all the difference."</p>
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-plum/20 flex items-center justify-center text-plum font-bold">SJ</div>
-                                        <div>
-                                            <p className="font-button-text text-button-text text-plum">Sarah J.</p>
-                                            <p className="font-body-sm text-body-sm text-muted-text">Parent, Test Prep Student</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="bg-white border border-border rounded-xl p-6 motion-card reveal-up reveal-delay-1">
-                                    <div className="flex gap-1 mb-4">
-                                        {[...Array(5)].map((_, i) => <span key={i} className="text-yellow-400 text-lg">★</span>)}
-                                    </div>
-                                    <p className="font-body-lg text-body-lg text-secondary mb-4 italic">"Got into my dream school with a 4.0 GPA. The STEM tutor made calculus click in ways I never thought possible."</p>
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-plum/20 flex items-center justify-center text-plum font-bold">MT</div>
-                                        <div>
-                                            <p className="font-button-text text-button-text text-plum">Marcus T.</p>
-                                            <p className="font-body-sm text-body-sm text-muted-text">College-Bound Student</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="bg-white border border-border rounded-xl p-6 motion-card reveal-up reveal-delay-2">
-                                    <div className="flex gap-1 mb-4">
-                                        {[...Array(5)].map((_, i) => <span key={i} className="text-yellow-400 text-lg">★</span>)}
-                                    </div>
-                                    <p className="font-body-lg text-body-lg text-secondary mb-4 italic">"The humanities tutor's essay feedback elevated my Common App response. Got into two Ivy League schools!"</p>
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-plum/20 flex items-center justify-center text-plum font-bold">ER</div>
-                                        <div>
-                                            <p className="font-button-text text-button-text text-plum">Elena R.</p>
-                                            <p className="font-body-sm text-body-sm text-muted-text">Ivy League Admitted</p>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1610,9 +1548,6 @@
                     4: { url: 'https://buy.stripe.com/dRmbJ17nqclA5488w50sU06', label: 'Advanced Placement' },
                     8: { url: 'https://buy.stripe.com/8x214nePS5Xcaos7s10sU07', label: 'Advanced Placement' },
                     12: { url: 'https://buy.stripe.com/eVq7sLePS2L0gMQdQp0sU08', label: 'Advanced Placement' }
-                },
-                admissions: {
-                    3: { url: 'https://buy.stripe.com/dRm14n0Z25Xc8gkbIh0sU0a', label: 'Admissions' }
                 }
             };
 
@@ -1626,9 +1561,6 @@
                     4: { price: 292, rate: 73, savings: 8, walkin: 80 },
                     8: { price: 560, rate: 70, savings: 80, walkin: 80 },
                     12: { price: 816, rate: 68, savings: 144, walkin: 80 }
-                },
-                admissions: {
-                    3: { price: 400, rate: 133, savings: 0, walkin: 150 }
                 },
                 advanced: {
                     4: { price: 188, rate: 47, savings: 32, walkin: 55 },
@@ -2661,4 +2593,3 @@
     </script>
 </body>
 >>>>>>> feature/deploy-legacy-dist-and-update-stripe
-</html>

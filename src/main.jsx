@@ -11,12 +11,14 @@ const tiers = {
   standard: { label: 'Standard', short: 'Core tutoring', description: 'Math, science, AP support, writing, and homework help.', walkIn: 45, accent: '#DBE7FF' },
   test_prep: { label: 'Test Prep', short: 'SAT / ACT track', description: 'SAT/ACT strategy, pacing, diagnostics, and targeted practice.', walkIn: 80, accent: '#E7F7EF' },
   ap_direct: { label: 'AP Direct', short: 'With AP only', description: 'One-on-one sessions directly with AP for the highest-touch support.', walkIn: 55, accent: '#FAF0FF' },
+  admissions: { label: 'Admissions Consulting', short: '3 Premium Sessions', description: '3 sessions over your college application timeline with premium resources.', walkIn: 150, accent: '#FFF4E6' },
 };
 
 const packages = {
   standard: { 4: { sku: 'standard_4', price: 148, rate: 37, savings: 32, link: 'https://buy.stripe.com/7sYcN537agBQaos6nX0sU00' }, 8: { sku: 'standard_8', price: 280, rate: 35, savings: 80, link: 'https://buy.stripe.com/3cIbJ10Z21GWfIM3bL0sU01' }, 12: { sku: 'standard_12', price: 396, rate: 33, savings: 144, link: 'https://buy.stripe.com/3cI8wP4beclAaos5jT0sU02' } },
   test_prep: { 4: { sku: 'test_prep_4', price: 292, rate: 73, savings: 28, link: 'https://buy.stripe.com/5kQ8wP4be99o2W08w50sU0c' }, 8: { sku: 'test_prep_8', price: 560, rate: 70, savings: 80, link: 'https://buy.stripe.com/cNi3cvbDG2L0bswdQp0sU0b' }, 12: { sku: 'test_prep_12', price: 816, rate: 68, savings: 144, link: 'https://buy.stripe.com/14AfZhazCfxMfIM9A90sU0d' } },
   ap_direct: { 4: { sku: 'ap_direct_4', price: 188, rate: 47, savings: 32, link: 'https://buy.stripe.com/dRmbJ17nqclA5488w50sU06' }, 8: { sku: 'ap_direct_8', price: 352, rate: 44, savings: 88, link: 'https://buy.stripe.com/8x214nePS5Xcaos7s10sU07' }, 12: { sku: 'ap_direct_12', price: 504, rate: 42, savings: 156, link: 'https://buy.stripe.com/eVq7sLePS2L0gMQdQp0sU08' } },
+  admissions: { 3: { sku: 'admissions_3', price: 400, rate: 133, savings: 0, link: 'https://buy.stripe.com/dRm14n0Z25Xc8gkbIh0sU0a', resources: true } },
 };
 
 const bookingLinks = {
@@ -29,6 +31,12 @@ const fadeUp = {
   hidden: { opacity: 0, y: 18 },
   show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
 };
+
+const reviews = [
+  { name: 'Sarah J.', text: 'The most professional prep I have ever experienced. His guidance alone helped me turn around my strategy.', rating: 5 },
+  { name: 'Marcus T.', text: 'Complex concepts made clear. Structured approach transformed my understanding completely.', rating: 5 },
+  { name: 'Elena R.', text: 'A complete strategic shift. Working with Anirudh was an exercise in self-discovery.', rating: 5 },
+];
 
 function App() {
   const [tier, setTier] = useState('standard');

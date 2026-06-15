@@ -53,11 +53,11 @@ export const tutorProfiles = [
   {
     id: "stem",
     checkoutTier: "standard",
-    label: "STEM Tutor",
+    label: "Alex Chen",
     tier: "Standard",
-    subjects: "Algebra, Precalculus, Chemistry, Physics",
-    style: "Structured problem solving",
-    bestFor: "Students who need clean steps, practice reps, and stronger fundamentals.",
+    subjects: "AP Calculus, AP Physics, SAT Math",
+    style: "MIT grad specializing in STEM fundamentals and AP exam mastery",
+    bestFor: "Students who need concept clarity over memorization. Alex has helped 28+ students achieve A+ grades in AP Calculus and Physics.",
     availability: ["Mon 5:00 PM", "Wed 6:30 PM", "Sun 11:00 AM"],
   },
   {
